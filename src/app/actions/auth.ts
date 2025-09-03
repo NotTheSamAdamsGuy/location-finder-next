@@ -36,6 +36,7 @@ const authenticateUser = async (
       requestOptions
     );
     const data = await response.json();
+    console.log(data);
     const token = data.token;
     return token;
   } catch (err) {

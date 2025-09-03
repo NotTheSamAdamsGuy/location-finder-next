@@ -36,12 +36,12 @@ export type LoginFormState =
     }
   | undefined;
 
-export type SessionPayload = {
-  userId: string;
-  expiresAt: Date;
-};
-
 export const GuessFormSchema = z.object({
   email: z.string().trim(),
   guess: z.string().trim(),
 });
+
+export type User = {
+  username: string;
+  role: string;
+}

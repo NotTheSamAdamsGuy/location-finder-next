@@ -1,5 +1,15 @@
-export default function Header() {
+import Link from "next/link";
+import { cookies } from "next/headers";
+
+import { getUser } from "../lib/session";
+import LogoutLink from "./LogoutLink";
+import { User } from "../lib/definitions";
+
+export default async function Header() {
   const siteName = process.env.SITE_NAME;
+
+  const token: string = (await cookies()).get("token")?.value as string;
+  const user: User = await getUser(token);
 
   return (
     <header>
@@ -27,6 +37,10 @@ export default function Header() {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
+              <AdminLink role={user.role} />
+              <li>
+                <LogoutLink user={user} />
+              </li>
               <li>
                 <a>Item 1</a>
               </li>
@@ -46,7 +60,7 @@ export default function Header() {
               </li>
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">{siteName}</a>
+          <Link href="/" className="btn btn-ghost text-xl">{siteName}</Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
@@ -69,6 +83,10 @@ export default function Header() {
             <li>
               <a>Item 3</a>
             </li>
+            <AdminLink role={user?.role} />
+            <li>
+              <LogoutLink user={user} />
+            </li>
           </ul>
         </div>
         <div className="navbar-end">
@@ -77,4 +95,14 @@ export default function Header() {
       </div>
     </header>
   );
+}
+
+function AdminLink({role}: {role: string | null}) {
+  let adminLink: React.ReactNode = "";
+
+  if (role === "ADMIN") {
+    adminLink = <li><Link href="/admin">Admin</Link></li>;
+  }
+  
+  return adminLink;
 }

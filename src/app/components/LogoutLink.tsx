@@ -1,18 +1,31 @@
 "use client";
 
 import { logout } from "../actions/auth";
+import { User } from "../lib/definitions";
 
-export default function LogoutLink({ className }: { className?: string }) {
+export default function LogoutLink({
+  user,
+  className,
+}: {
+  user: User;
+  className?: string;
+}) {
   const handleLogoutClick = async () => {
     logout();
   };
 
-  return (
-    <button
-      className={`cursor-pointer hover:underline text-2xl md:text-4xl ${className}`}
-      onClick={handleLogoutClick}
-    >
-      Log Out
-    </button>
-  );
+  let logoutLink: React.ReactNode = "";
+
+  if (user) {
+    logoutLink = (
+      <button
+        className={`${className}`}
+        onClick={handleLogoutClick}
+      >
+        Log Out
+      </button>
+    );
+  }
+
+  return logoutLink;
 }

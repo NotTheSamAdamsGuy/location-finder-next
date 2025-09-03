@@ -1,6 +1,7 @@
 import "server-only";
-import { jwtVerify } from "jose";
+import { JWTPayload, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { User } from "./definitions";
 
 const secretKey = process.env.JWT_SECRET_KEY;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -15,6 +16,7 @@ export async function decrypt(session: string | undefined = "") {
   } catch (error) {
     console.log("Failed to verify session");
   }
+  return {};
 }
 
 export async function createSession(token: string) {
@@ -29,4 +31,24 @@ export async function createSession(token: string) {
     sameSite: "lax",
     path: "/",
   });
+}
+
+export async function getUser(token: string) {
+  const session: JWTPayload = await decrypt(token);
+  const user: User = {
+    username: "",
+    role: ""
+  }
+
+  if (session) {
+    user.username = session.username as string;
+    user.role = session.role as string;
+  } 
+
+  return user;
+}
+
+export async function getRole(token: string) {
+  const session = await decrypt(token);
+  return session?.role;
 }
