@@ -1,25 +1,24 @@
 import "server-only";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
 const secretKey = process.env.JWT_SECRET_KEY;
+const encodedKey = new TextEncoder().encode(secretKey);
 
-export function decrypt(token: string) {
+export async function decrypt(session: string | undefined = "") {
   try {
-    const payload: JwtPayload = jwt.verify(
-      token,
-      secretKey as string
-    ) as JwtPayload;
+    const { payload } = await jwtVerify(session, encodedKey, {
+      algorithms: ["HS256"],
+    });
     return payload;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
-    // TODO: update this
-    console.log(error);
     console.log("Failed to verify session");
   }
 }
 
 export async function createSession(token: string) {
-  const tokenData = decrypt(token);
+  const tokenData = await decrypt(token);
   const expiresAt = new Date((tokenData!.exp as number) * 1000);
   const cookieStore = await cookies();
 
@@ -31,33 +30,3 @@ export async function createSession(token: string) {
     path: "/",
   });
 }
-
-// export async function getUserId() {
-//   return (await cookies()).get("userId")?.value;
-// }
-
-// export async function updateSession() {
-//   const token: string = (await cookies()).get("token")?.value as string;
-//   const payload = await decrypt(token);
-
-//   if (!token || !payload) {
-//     return null;
-//   }
-
-//   const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
-//   const cookieStore = await cookies();
-//   cookieStore.set("session", token, {
-//     httpOnly: true,
-//     secure: true,
-//     expires: expires,
-//     sameSite: "lax",
-//     path: "/",
-//   });
-// }
-
-// export async function deleteSession() {
-//   const cookieStore = await cookies();
-//   console.log(cookieStore);
-//   cookieStore.delete("token");
-// }

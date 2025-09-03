@@ -39,6 +39,7 @@ const authenticateUser = async (
     const token = data.token;
     return token;
   } catch (err) {
+    // TODO: make this work properly - it isn't writing to the console - do we need to return something?
     console.log(err);
     throw err;
   }
