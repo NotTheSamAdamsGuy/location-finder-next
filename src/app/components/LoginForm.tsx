@@ -5,7 +5,6 @@ import { login } from "@/app/actions/auth";
 
 export default function LoginForm() {
   const [state, action, pending] = useActionState(login, undefined);
-  console.log(state?.errors);
 
   return (
     <form
@@ -23,6 +22,7 @@ export default function LoginForm() {
           name="username"
           type="text"
           className="input flex"
+          required={true}
         />
       </div>
       {state?.errors?.username && <p>{state.errors.username}</p>}
@@ -36,10 +36,13 @@ export default function LoginForm() {
           name="password"
           type="password"
           className="input flex"
+          required={true}
         />
       </div>
       <div className="flex mt-12 justify-center">
-        <button className="btn" type="submit" disabled={pending}>Login</button>
+        <button className="btn" type="submit" disabled={pending}>
+          Login
+        </button>
       </div>
     </form>
   );

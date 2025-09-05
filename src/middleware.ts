@@ -4,18 +4,21 @@ import { decrypt } from "@/app/lib/session";
 import { cookies } from "next/headers";
 
 // 1. Specify protected and public routes
-const protectedRoutes = ["/"];
+const protectedRoutes = ["/", "/admin", "/admin/locations", "/admin/locations/add"];
 const publicRoutes = ["/login"];
-const adminRoutes = ["/admin", "/admin/locations", "/admin/locations/add"];
 
 export default async function middleware(req: NextRequest) {
+  const headers = new Headers(req.headers);
+
+  // add path for use in building breadcrumbs
+  headers.set("x-current-path", req.nextUrl.pathname);
+
   // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname;
   const isProtectedRoute = protectedRoutes.includes(path);
   const isPublicRoute = publicRoutes.includes(path);
-  const isAdminRoute = adminRoutes.includes(path);
 
-  // 3. Decrypt the session from the cookie
+  // 3. Decrypt the session from the cookie - can't use verifySession because using next/navigation is disallowed in middleware
   const token: string= (await cookies()).get("token")?.value as string;
   const session = await decrypt(token);
   
@@ -24,16 +27,8 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  if (isAdminRoute) {
-    if (!session?.username) {
-      return NextResponse.redirect(new URL("/login", req.nextUrl));
-    } else if (session?.role !== "ADMIN") {
-      // TODO: replace this with error page
-      return new Response(null, { status: 403 });
-    }
-  }
-
-  // 5. Redirect to /dashboard if the user is authenticated
+  // 5. Redirect to / if the user is authenticated
+  // TODO: figure out how to redirect the user to the originally requested page
   if (
     isPublicRoute &&
     session?.username &&
@@ -42,7 +37,7 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
-  return NextResponse.next();
+  return NextResponse.next({ headers });
 }
 
 // Routes Middleware should not run on
