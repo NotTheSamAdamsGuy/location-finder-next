@@ -1,68 +1,3 @@
-import { z } from "zod";
-
-export const SignupFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: "Name must be at least 2 characters long." })
-    .trim(),
-  email: z.string().email({ message: "Please enter a valid email." }).trim(),
-  password: z.string().trim(),
-});
-
-export const LoginFormSchema = z.object({
-  username: z.string().min(1, "Username is required").trim(),
-  password: z.string().min(1, "Password is required").trim(),
-});
-
-export const AddLocationFormSchema = z.object({
-  name: z.string().trim(),
-  description: z.string().trim(),
-  streetAddress: z.string().trim(),
-  city: z.string().trim(),
-  state: z.string().trim(),
-  zip: z.string().trim(),
-});
-
-export type FormState =
-  | {
-      errors?: {
-        name?: string[];
-        email?: string[];
-        password?: string[];
-        userNotFound?: boolean;
-      };
-      message?: string;
-    }
-  | undefined;
-
-export type LoginFormState =
-  | {
-      errors?: {
-        username?: string[];
-        password?: string[];
-      };
-      message?: string;
-    }
-  | undefined;
-
-export type AddLocationFormState =
-  | {
-      errors?: {
-        name?: string[];
-        description?: string[];
-        streetAddress?: string[];
-        city?: string[];
-        state?: string[];
-        zip?: string[];
-      };
-    }
-  | undefined;
-
-export const GuessFormSchema = z.object({
-  email: z.string().trim(),
-  guess: z.string().trim(),
-});
-
 export type User = {
   username: string;
   role: string;
@@ -102,7 +37,14 @@ export type TableData = {
   footers?: React.ReactNode[];
 };
 
-export const US_STATES = [
+export type FileCard = {
+  file: File;
+  description: string | null;
+};
+
+export const ImageFileTypes = ["png", "jpg", "jpeg", "webp"];
+
+export const USStates = [
   { abbreviation: "AK", name: "Alaska" },
   { abbreviation: "AL", name: "Alabama" },
   { abbreviation: "AR", name: "Arkansas" },

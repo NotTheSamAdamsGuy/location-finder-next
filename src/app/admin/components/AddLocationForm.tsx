@@ -1,15 +1,36 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 
-import { addLocation } from "../actions/locations";
-import { US_STATES } from "../lib/definitions";
-import Select from "./form/Select";
+import { addLocation } from "@/app/actions/locations";
+import { USStates, FileCard } from "@/app/lib/definitions";
+import Select from "@/app/components/form/Select";
+import DragDrop from "@/app/components/DragDrop";
+import FileList from "@/app/admin/components/FileList";
 
 export default function AddLocationForm() {
   const [state, action, pending] = useActionState(addLocation, undefined);
+  const [fileCards, setFileCards] = useState<FileCard[]>([]);
 
-  const stateOptions = US_STATES.map((state) => {
+  const handleFilesSelected = (files: File | File[]) => {
+    const fileCardsCopy = [...fileCards];
+    
+    // Files are in a FileList object. Since we don't know how many there are,
+    // we need to iterate over the object's entries, which are in Record<number, File>
+    // format.
+    Object.entries(files).forEach((entry) => {
+      const fileCard: FileCard = {
+        file: entry[1],
+        description: ""
+      };
+
+      fileCardsCopy.push(fileCard);
+    });
+
+    setFileCards(fileCardsCopy);
+  }
+
+  const stateOptions = USStates.map((state) => {
     return { key: state.abbreviation, value: state.name };
   });
 
@@ -26,8 +47,8 @@ export default function AddLocationForm() {
           className="input flex w-full"
           autoComplete="off"
         />
+        <p className="text-error text-sm h-1.5">{state?.errors.name}</p>
       </div>
-      {/* {state?.errors?.username && <p>{state.errors.username}</p>} */}
 
       <div className="flex flex-col mt-4">
         <label htmlFor="description" className="label flex">
@@ -40,6 +61,7 @@ export default function AddLocationForm() {
           className="input flex w-full"
           autoComplete="off"
         />
+        <p className="text-error text-sm h-1.5">{state?.errors.description}</p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -53,6 +75,7 @@ export default function AddLocationForm() {
           className="input flex w-full"
           autoComplete="off"
         />
+        <p className="text-error text-sm h-1.5">{state?.errors.streetAddress}</p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -66,6 +89,7 @@ export default function AddLocationForm() {
           className="input flex w-full"
           autoComplete="off"
         />
+        <p className="text-error text-sm h-1.5">{state?.errors.city}</p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -78,6 +102,7 @@ export default function AddLocationForm() {
           name="state"
           id="state"
         />
+        <p className="text-error text-sm h-1.5">{state?.errors.state}</p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -91,19 +116,18 @@ export default function AddLocationForm() {
           className="input flex w-full"
           autoComplete="off"
         />
+        <p className="text-error text-sm h-1.5">{state?.errors.zip}</p>
       </div>
 
       <div className="flex flex-col mt-4">
         <label className="label flex">Images</label>
         <div>
-          <div className="p-3 border border-gray-400 rounded">
-            TODO: add image listing
-          </div>
-          <button className="link">Add an image</button>
+          <DragDrop fileCards={fileCards} onFilesSelected={handleFilesSelected} />
+          <FileList fileCards={fileCards} />  
         </div>
       </div>
       <div className="flex mt-12 justify-center">
-        <button className="btn" type="submit" disabled={pending}>
+        <button className="btn btn-primary w-full" type="submit" disabled={pending}>
           Submit
         </button>
       </div>

@@ -1,22 +1,23 @@
+"use client"
+
 import Link from "next/link";
-import { headers } from "next/headers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
+import { usePathname } from "next/navigation";
 
 export type BreadcrumbData = {
   text: React.ReactNode;
   link: string;
 };
 
-export default async function Breadcrumbs({
+export default function Breadcrumbs({
   type,
   className="text-sm bg-gray-100 px-3 border-0 border-gray-300 border-b border-t"
 }: {
   type: "admin" | "site",
   className?: string
 }) {
-  const headerList = await headers();
-  const pathname = headerList.get("x-current-path");
+  const pathname = usePathname();
   const breadcrumbsPaths = pathname?.split("/");
   const breadcrumbItems: React.ReactNode[] = [];
   const mappingFunction = type === "admin" ? adminBreadcrumbMapper : siteBreadcrumbMapper
@@ -63,6 +64,12 @@ const adminBreadcrumbMapper = (path: string): BreadcrumbData => {
         text: "Add a Location",
         link: "/admin/locations/add",
       };
+    case "tags": {
+      return {
+        text: "Tags",
+        link: "/admin/tags"
+      }
+    }
   }
   return {
     text: "fix me",

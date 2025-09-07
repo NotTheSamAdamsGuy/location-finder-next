@@ -1,11 +1,25 @@
 "use server";
 
-// import bcrypt from "bcrypt";
-import { FormState, LoginFormSchema } from "@/app/lib/definitions";
-import { createSession } from "../lib/session";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-// import { getUser } from "../lib/dal";
+import { z } from "zod";
+
+import { createSession } from "../lib/session";
+
+type LoginFormState =
+  | {
+      errors?: {
+        username?: string[];
+        password?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+const LoginFormSchema = z.object({
+  username: z.string().trim().min(1, "Username is required"),
+  password: z.string().trim().min(1, "Password is required"),
+});
 
 /**
  * Authenticate a user's credentials.
@@ -45,7 +59,13 @@ const authenticateUser = async (
   }
 };
 
-export async function login(state: FormState, formData: FormData) {
+/**
+ * Log the user in if valid credentials are provided, otherwise return error messages
+ * @param formState a LoginFormState object containing error messages or undefined
+ * @param formData form data submitted by the user
+ * @returns a Promise resolving to a LoginFormState object
+ */
+export async function login(formState: LoginFormState, formData: FormData) {
   // Validate form fields
   const validatedFields = LoginFormSchema.safeParse({
     username: formData.get("username"),
@@ -73,42 +93,9 @@ export async function login(state: FormState, formData: FormData) {
   redirect("/");
 }
 
-// export async function signup(state: FormState, formData: FormData) {
-//   // Validate form fields
-//   const validatedFields = SignupFormSchema.safeParse({
-//     name: formData.get("name"),
-//     email: formData.get("email"),
-//     password: formData.get("password"),
-//   });
-
-//   // If any form fields are invalid, return early
-//   if (!validatedFields.success) {
-//     return {
-//       errors: validatedFields.error.flatten().fieldErrors,
-//     };
-//   }
-
-//   // 2. Prepare data for insertion into database
-//   const { email, password } = validatedFields.data;
-//   // e.g. Hash the user's password before storing it
-//   // const hashedPassword = await bcrypt.hash(password, 10);
-
-//   // console.log(hashedPassword);
-
-//   const user = await getUser(email, password);
-
-//   if (!user) {
-//     return {
-//       message: "An error occurred while logging in.",
-//     };
-//   }
-
-//   // 4. Create user session
-//   await createSession(user);
-//   // 5. Redirect user
-//   redirect("/");
-// }
-
+/**
+ * Log the user out of the application and return them to the login page
+ */
 export async function logout() {
   const cookieStore = await cookies();
   cookieStore.delete("token");

@@ -1,43 +1,40 @@
-// export const addLocation = async (formData: FormData) => {
-//   console.log(formData);
-//   // const postData = {
-//   //   username: username,
-//   //   password: password,
-//   // };
-
 "use server"
 
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { z } from "zod";
 
-import {
-  AddLocationFormSchema,
-  AddLocationFormState,
-} from "../lib/definitions";
+type AddLocationFormState =
+  | {
+      errors?: {
+        name?: string[];
+        description?: string[];
+        streetAddress?: string[];
+        city?: string[];
+        state?: string[];
+        zip?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
 
-//   // const requestOptions = {
-//   //   method: "POST",
-//   //   headers: {
-//   //     "Content-Type": "application/json",
-//   //   },
-//   //   body: JSON.stringify(postData),
-//   // };
+const AddLocationFormSchema = z.object({
+  name: z.string().trim().min(1, "Name is required"),
+  description: z.string().trim(),
+  streetAddress: z.string().trim().min(1, "Street address is required"),
+  city: z.string().trim().min(1, "City is required"),
+  state: z.string("State is required").trim(),
+  zip: z.string().trim().min(1, "ZIP code is required"),
+  images: z.array(z.file()),
+  imageDescriptions: z.array(z.string())
+});
 
-//   // try {
-//   //   const response = await fetch(
-//   //     `${process.env.SITE_HOST}:${process.env.SITE_PORT}/authentication/login`,
-//   //     requestOptions
-//   //   );
-//   //   const data = await response.json();
-//   //   const token = data.token;
-//   //   return token;
-//   // } catch (err) {
-//   //   // TODO: make this work properly - it isn't writing to the console - do we need to return something?
-//   //   console.log(err);
-//   //   throw err;
-//   // }
-// };
-
+/**
+ * Add a location to the database if the provided values are valid, otherwise return error messages
+ * @param formState an AddLocationFormState object containing error messages or undefined
+ * @param formData form data submitted by the user
+ * @returns a Promise resolving to an AddLocationFormState object
+ */
 export const addLocation = async (formState: AddLocationFormState, formData: FormData) => {
   // validate form fields
   const validatedFields = AddLocationFormSchema.safeParse({
@@ -47,6 +44,8 @@ export const addLocation = async (formState: AddLocationFormState, formData: For
     city: formData.get("city"),
     state: formData.get("state"),
     zip: formData.get("zip"),
+    images: formData.getAll("images"),
+    imageDescriptions: formData.getAll("imageDescription")
   });
 
   // If any form fields are invalid, return early
@@ -56,32 +55,48 @@ export const addLocation = async (formState: AddLocationFormState, formData: For
     };
   }
 
-  const { name, description, streetAddress, city, state, zip } =
+  const { name, description, streetAddress, city, state, zip, images, imageDescriptions } =
     validatedFields.data;
 
-  // attempt to save the data to the database
-  const postData = {
-    name: name,
-    description: description,
-    streetAddress: streetAddress,
-    city: city,
-    state: state,
-    zip: zip
-  };
+  // attempt to post data to the server
+  const postData: FormData = new FormData();
+  postData.append("name", name);
+  postData.append("description", description);
+  postData.append("streetAddress", streetAddress);
+  postData.append("city", city);
+  postData.append("state", state);
+  postData.append("zip", zip);
 
-  // console.log(postData);
+  images.forEach((image) => {
+    postData.append("images", image);
+  });
+
+  imageDescriptions.forEach((description) => {
+    postData.append("imageDescription", description);
+  })
+
+  for (const [key, value] of formData.entries()) {
+    if (key === "images") {
+      postData.append("images", value);
+    }
+
+    if (key === "imageDescription") {
+      postData.append("imageDescription", value);
+    }
+  }
+
   const token = (await cookies()).get("token")?.value;
 
   const requestOptions = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
     },
-    body: JSON.stringify(postData),
+    body: postData
   };
 
-  // console.log(requestOptions);
+  // we can't include a redirect in a try/catch block, so use a variable to track if we should redirect
+  let success = false;
 
   try {
     const response = await fetch(
@@ -90,16 +105,17 @@ export const addLocation = async (formState: AddLocationFormState, formData: For
     );
 
     if (response.ok) {
-      const data = await response.json();
-      console.log(`Successfully created new location record: ${data}`);
-      redirect("/admin/locations");
-    } else {
-      throw new Error("Unable to add new location");
-    }
-    
+      success = true;
+    } 
   } catch (err) {
     // TODO: make this work properly - it isn't writing to the console - do we need to return something?
     console.log(err);
     throw err;
+  }
+
+  if (success) {
+    redirect("/admin/locations");
+  } else {
+    throw new Error("Unable to add new location");
   }
 };

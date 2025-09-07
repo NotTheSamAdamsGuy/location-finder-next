@@ -24,8 +24,8 @@ export default function LoginForm() {
           className="input flex"
           required={true}
         />
+        <p className="text-error text-sm h-1.5">{state?.errors?.username}</p>
       </div>
-      {state?.errors?.username && <p>{state.errors.username}</p>}
 
       <div className="flex flex-col mt-8">
         <label htmlFor="password" className="label flex">
@@ -38,7 +38,9 @@ export default function LoginForm() {
           className="input flex"
           required={true}
         />
+        <p className="text-error text-sm h-1.5">{state?.errors?.password}</p>
       </div>
+      <p className="text-error text-sm h-1.5">{state?.message}</p>
       <div className="flex mt-12 justify-center">
         <button className="btn" type="submit" disabled={pending}>
           Login

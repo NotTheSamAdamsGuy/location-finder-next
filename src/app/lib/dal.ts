@@ -45,3 +45,33 @@ export const getAllLocations = async () => {
     throw err;
   }
 };
+
+export const getAllTags = async () => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    const response = await fetch(
+      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/tags`,
+      requestOptions
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error("Unable to retrieve tags");
+    }
+  } catch (err) {
+    // TODO: make this work properly - it isn't writing to the console - do we need to return something?
+    console.log(err);
+    throw err;
+  }
+}

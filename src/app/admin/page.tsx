@@ -39,6 +39,17 @@ export default async function AdminPage() {
             </div>
           </div>
         </div>
+        <div className="card bg-accent text-primary-content my-3">
+          <div className="card-body">
+            <h2 className="card-title">Tags</h2>
+            <p>Add, edit, or remove tags</p>
+            <div className="card-actions justify-center mt-2">
+              <Link href="/admin/tags" className="btn">
+                Manage Tags
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
