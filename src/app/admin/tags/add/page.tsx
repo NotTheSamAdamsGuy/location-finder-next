@@ -1,6 +1,6 @@
 import { forbidden } from "next/navigation";
 
-import AddTagForm from "@/app/admin/components/AddTagForm";
+import TagForm from "@/app/admin/components/TagForm";
 import PageHeader from "../../components/PageHeader";
 import { verifySession } from "@/app/lib/dal";
 import Breadcrumbs from "../../../components/Breadcrumbs";
@@ -18,7 +18,7 @@ export default async function AddTagAdminPage() {
       <div className="px-3 py-1.5">
         <PageHeader title="Add a Tag" />
         <div className="my-3">
-          <AddTagForm />
+          <TagForm type="add" />
         </div>
       </div>
     </div>

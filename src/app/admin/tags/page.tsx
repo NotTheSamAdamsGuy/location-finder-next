@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { forbidden } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import { TableData } from "@/app/lib/definitions";
-import { BasicTable } from "@/app/components/tables/BasicTable";
+import { ClientTable } from "@/app/components/tables/ClientTable";
 import { getAllTags, verifySession } from "@/app/lib/dal";
-import Breadcrumbs from "../../components/Breadcrumbs";
+import Breadcrumbs from "@/app/components/Breadcrumbs";
 
 export default async function TagsAdminPage() {
   const session = await verifySession();
@@ -17,9 +19,22 @@ export default async function TagsAdminPage() {
   const tags: string[] = await getAllTags();
 
   const mapTagsToTableData = (tags: string[]): TableData => {
-    const headers = ["Tag"];
-    const values = tags.map((tag) => {
-      return [tag];
+    const headers = ["Tag", "Actions"];
+    
+    const values = tags.map((tag, index) => {
+      return [
+        tag,
+        <div key={index} className="flex">
+          <div>
+            <Link href={`/admin/tags/${tag}`} title="Edit">
+              <FontAwesomeIcon icon={faPenToSquare} width="0.75rem" />
+            </Link>
+          </div>
+          <div title="Delete">
+            <FontAwesomeIcon icon={faTrash} width="0.75rem" />
+          </div>
+        </div>,
+      ];
     });
 
     return { headers: headers, values: values };
@@ -38,7 +53,7 @@ export default async function TagsAdminPage() {
           <Link className="btn btn-primary w-full" href="/admin/tags/add">
             Add a Tag
           </Link>
-          <BasicTable data={tableData} />
+          <ClientTable data={tableData} />
         </div>
       </div>
     </div>

@@ -43,6 +43,7 @@ export default function Breadcrumbs({
 }
 
 const adminBreadcrumbMapper = (path: string): BreadcrumbData => {
+  path = decodeURIComponent(path);
   switch (path) {
     case "":
       return {
@@ -64,17 +65,17 @@ const adminBreadcrumbMapper = (path: string): BreadcrumbData => {
         text: "Add a Location",
         link: "/admin/locations/add",
       };
-    case "tags": {
+    case "tags": 
       return {
         text: "Tags",
         link: "/admin/tags"
       }
-    }
+    default:
+      return {
+        text: path,
+        link: `/admin/${path}`
+      }
   }
-  return {
-    text: "fix me",
-    link: "",
-  };
 };
 
 const siteBreadcrumbMapper = (path: string): BreadcrumbData => {
