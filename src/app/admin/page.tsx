@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 
-import { verifySession } from "../lib/dal";
+import { verifySession } from "@/app/lib/session";
 import PageHeader from "./components/PageHeader";
 import Breadcrumbs from "../components/Breadcrumbs";
 

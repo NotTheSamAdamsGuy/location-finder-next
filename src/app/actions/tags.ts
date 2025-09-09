@@ -19,7 +19,7 @@ const AddTagFormSchema = z.object({
 
 const UpdateTagFormSchema = z.object({
   tag: z.string().trim().nonempty("Tag is required"),
-  currentTag: z.string().trim()
+  currentTag: z.string().trim(),
 });
 
 /**
@@ -75,7 +75,6 @@ export const addTag = async (
       success = true;
     }
   } catch (err) {
-    // TODO: make this work properly - it isn't writing to the console - do we need to return something?
     console.log(err);
     throw err;
   }
@@ -115,7 +114,7 @@ export const updateTag = async (
   // attempt to post data to the server
   const postData = {
     newTag: tag,
-    currentTag: currentTag
+    currentTag: currentTag,
   };
 
   const token = (await cookies()).get("token")?.value;
@@ -128,8 +127,6 @@ export const updateTag = async (
     },
     body: JSON.stringify(postData),
   };
-
-  console.log(postData);
 
   // we can't include a redirect in a try/catch block, so use a variable to track if we should redirect
   let success = false;
@@ -154,4 +151,28 @@ export const updateTag = async (
   } else {
     throw new Error("Unable to add new tag");
   }
+};
+
+/**
+ * Delete a tag from the database
+ * @param tag the tag to delete
+ * @returns Response
+ */
+export const deleteTag = async (tag: string) => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await fetch(
+    `${process.env.SITE_HOST}:${process.env.SITE_PORT}/tags/${tag}`,
+    requestOptions
+  );
+
+  return response.json();
 };

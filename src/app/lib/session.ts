@@ -1,4 +1,7 @@
 import "server-only";
+
+import { cache } from "react";
+import { redirect } from "next/navigation";
 import { JWTPayload, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { User } from "./definitions";
@@ -52,3 +55,14 @@ export async function getRole(token: string) {
   const session = await decrypt(token);
   return session?.role;
 }
+
+export const verifySession = cache(async () => {
+  const cookie = (await cookies()).get("token")?.value;
+  const session = await decrypt(cookie);
+
+  if (!session?.username) {
+    redirect("/login");
+  }
+
+  return { isAuth: true, username: session.username, role: session.role};
+});

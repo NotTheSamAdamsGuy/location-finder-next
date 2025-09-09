@@ -2,7 +2,7 @@ import { forbidden } from "next/navigation";
 
 import TagForm from "@/app/admin/components/TagForm";
 import PageHeader from "../../components/PageHeader";
-import { verifySession } from "@/app/lib/dal";
+import { verifySession } from "@/app/lib/session";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 
 export default async function AddTagAdminPage() {

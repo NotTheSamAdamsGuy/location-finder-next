@@ -3,8 +3,9 @@ import { forbidden } from "next/navigation";
 
 import { Location, TableData } from "@/app/lib/definitions";
 import { BasicTable } from "@/app/components/tables/BasicTable";
-import { getAllLocations, verifySession } from "@/app/lib/dal";
-import Breadcrumbs from "../../components/Breadcrumbs";
+import { verifySession } from "@/app/lib/session";
+import { getAllLocations } from "@/app/data/locations";
+import Breadcrumbs from "@/app/components/Breadcrumbs";
 
 export default async function LocationsAdminPage() {
   const session = await verifySession();

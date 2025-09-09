@@ -2,7 +2,8 @@ import { forbidden, notFound } from "next/navigation";
 
 import TagForm from "@/app/admin/components/TagForm";
 import PageHeader from "@/app/admin/components/PageHeader";
-import { getTag, verifySession } from "@/app/lib/dal";
+import { verifySession } from "@/app/lib/session";
+import { getTag } from "@/app/data/tags";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 
 export default async function UpdateTagAdminPage({
