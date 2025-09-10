@@ -26,7 +26,8 @@ const AddLocationFormSchema = z.object({
   state: z.string("State is required").trim(),
   zip: z.string().trim().min(1, "ZIP code is required"),
   images: z.array(z.file()),
-  imageDescriptions: z.array(z.string())
+  imageDescriptions: z.array(z.string()),
+  tags: z.array(z.string())
 });
 
 /**
@@ -45,7 +46,8 @@ export const addLocation = async (formState: AddLocationFormState, formData: For
     state: formData.get("state"),
     zip: formData.get("zip"),
     images: formData.getAll("images"),
-    imageDescriptions: formData.getAll("imageDescription")
+    imageDescriptions: formData.getAll("imageDescription"),
+    tags: formData.getAll("tag")
   });
 
   // If any form fields are invalid, return early
@@ -55,7 +57,7 @@ export const addLocation = async (formState: AddLocationFormState, formData: For
     };
   }
 
-  const { name, description, streetAddress, city, state, zip, images, imageDescriptions } =
+  const { name, description, streetAddress, city, state, zip, images, imageDescriptions, tags } =
     validatedFields.data;
 
   // attempt to post data to the server
@@ -73,6 +75,10 @@ export const addLocation = async (formState: AddLocationFormState, formData: For
 
   imageDescriptions.forEach((description) => {
     postData.append("imageDescription", description);
+  });
+
+  tags.forEach((tag) => {
+    postData.append("tag", tag);
   })
 
   for (const [key, value] of formData.entries()) {

@@ -7,10 +7,12 @@ import { USStates, FileCard } from "@/app/lib/definitions";
 import Select from "@/app/components/form/Select";
 import DragDrop from "@/app/components/DragDrop";
 import FileList from "@/app/admin/components/FileList";
+import Multiselect from "@/app/components/form/Multiselect";
 
 export default function AddLocationForm() {
   const [state, action, pending] = useActionState(addLocation, undefined);
   const [fileCards, setFileCards] = useState<FileCard[]>([]);
+  const tags = ["tag1","tag2","tag3"].map((tag) => {return {optionText: tag, value: tag}});
 
   const handleFilesSelected = (files: File | File[]) => {
     const fileCardsCopy = [...fileCards];
@@ -44,7 +46,7 @@ export default function AddLocationForm() {
           id="name"
           name="name"
           type="text"
-          className="input flex w-full"
+          className="input input-lg flex w-full"
           autoComplete="off"
         />
         <p className="text-error text-sm h-1.5">{state?.errors.name}</p>
@@ -58,7 +60,7 @@ export default function AddLocationForm() {
           id="description"
           name="description"
           type="text"
-          className="input flex w-full"
+          className="input input-lg flex w-full"
           autoComplete="off"
         />
         <p className="text-error text-sm h-1.5">{state?.errors.description}</p>
@@ -72,7 +74,7 @@ export default function AddLocationForm() {
           id="street-address"
           name="street-address"
           type="text"
-          className="input flex w-full"
+          className="input input-lg flex w-full"
           autoComplete="off"
         />
         <p className="text-error text-sm h-1.5">{state?.errors.streetAddress}</p>
@@ -86,7 +88,7 @@ export default function AddLocationForm() {
           id="city"
           name="city"
           type="text"
-          className="input flex w-full"
+          className="input input-lg flex w-full"
           autoComplete="off"
         />
         <p className="text-error text-sm h-1.5">{state?.errors.city}</p>
@@ -113,7 +115,7 @@ export default function AddLocationForm() {
           id="zip"
           name="zip"
           type="text"
-          className="input flex w-full"
+          className="input input-lg flex w-full"
           autoComplete="off"
         />
         <p className="text-error text-sm h-1.5">{state?.errors.zip}</p>
@@ -125,6 +127,11 @@ export default function AddLocationForm() {
           <DragDrop fileCards={fileCards} onFilesSelected={handleFilesSelected} />
           <FileList fileCards={fileCards} />  
         </div>
+      </div>
+
+      <div className="flex flex-col mt-4">
+        <label className="label flex">Tags</label>
+        <Multiselect options={tags} formFieldValue="tag" onChange={() => {}} />
       </div>
       <div className="flex mt-12 justify-center">
         <button className="btn btn-primary w-full" type="submit" disabled={pending}>
