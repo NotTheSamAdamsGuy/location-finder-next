@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
@@ -25,9 +25,8 @@ const AddLocationFormSchema = z.object({
   city: z.string().trim().min(1, "City is required"),
   state: z.string("State is required").trim(),
   zip: z.string().trim().min(1, "ZIP code is required"),
-  images: z.array(z.file()),
-  imageDescriptions: z.array(z.string()),
-  tags: z.array(z.string())
+  tags: z.array(z.string()),
+  imageDescriptions: z.array(z.string())
 });
 
 /**
@@ -36,28 +35,40 @@ const AddLocationFormSchema = z.object({
  * @param formData form data submitted by the user
  * @returns a Promise resolving to an AddLocationFormState object
  */
-export const addLocation = async (formState: AddLocationFormState, formData: FormData) => {
+export const addLocation = async (
+  formState: AddLocationFormState,
+  formData: FormData
+) => {
   // validate form fields
   const validatedFields = AddLocationFormSchema.safeParse({
     name: formData.get("name"),
     description: formData.get("description"),
-    streetAddress: formData.get("street-address"),
+    streetAddress: formData.get("streetAddress"),
     city: formData.get("city"),
     state: formData.get("state"),
     zip: formData.get("zip"),
-    images: formData.getAll("images"),
-    imageDescriptions: formData.getAll("imageDescription"),
-    tags: formData.getAll("tag")
+    tags: formData.getAll("tag"),
+    imageDescriptions: formData.getAll("imageDescription")
   });
 
   // If any form fields are invalid, return early
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
+      fields: {
+        name: formData.get("name"),
+        description: formData.get("description"),
+        streetAddress: formData.get("streetAddress"),
+        city: formData.get("city"),
+        state: formData.get("state"),
+        zip: formData.get("zip"),
+        tags: formData.getAll("tag"),
+        imageDescriptions: formData.getAll("imageDescription")
+      },
     };
   }
 
-  const { name, description, streetAddress, city, state, zip, images, imageDescriptions, tags } =
+  const { name, description, streetAddress, city, state, zip, tags, imageDescriptions } =
     validatedFields.data;
 
   // attempt to post data to the server
@@ -69,25 +80,24 @@ export const addLocation = async (formState: AddLocationFormState, formData: For
   postData.append("state", state);
   postData.append("zip", zip);
 
-  images.forEach((image) => {
-    postData.append("images", image);
-  });
-
-  imageDescriptions.forEach((description) => {
-    postData.append("imageDescription", description);
-  });
-
   tags.forEach((tag) => {
     postData.append("tag", tag);
-  })
+  });
 
+  imageDescriptions.forEach((imageDescription) => {
+    postData.append("imageDescription", imageDescription);
+  });
+
+  // something is causing Zod validation to throw an error when we try to use
+  // it for Files, so for now we are skipping validation and adding files. It
+  // could be related to the DragDrop component.
   for (const [key, value] of formData.entries()) {
-    if (key === "images") {
+    if (
+      key === "images" &&
+      (value as File).size > 0 &&
+      (value as File).name !== undefined
+    ) {
       postData.append("images", value);
-    }
-
-    if (key === "imageDescription") {
-      postData.append("imageDescription", value);
     }
   }
 
@@ -96,25 +106,25 @@ export const addLocation = async (formState: AddLocationFormState, formData: For
   const requestOptions = {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
-    body: postData
+    body: postData,
   };
 
   // we can't include a redirect in a try/catch block, so use a variable to track if we should redirect
   let success = false;
+  let response;
 
   try {
-    const response = await fetch(
+    response = await fetch(
       `${process.env.SITE_HOST}:${process.env.SITE_PORT}/locations`,
       requestOptions
     );
 
     if (response.ok) {
       success = true;
-    } 
+    }
   } catch (err) {
-    // TODO: make this work properly - it isn't writing to the console - do we need to return something?
     console.log(err);
     throw err;
   }
@@ -122,6 +132,7 @@ export const addLocation = async (formState: AddLocationFormState, formData: For
   if (success) {
     redirect("/admin/locations");
   } else {
-    throw new Error("Unable to add new location");
+    const data = await response.json();
+    throw new Error(`Unable to add new location. ${data.message}`);
   }
 };

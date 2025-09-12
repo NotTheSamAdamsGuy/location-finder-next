@@ -10,9 +10,17 @@ import FileList from "@/app/admin/components/FileList";
 import Multiselect from "@/app/components/form/Multiselect";
 
 export default function AddLocationForm() {
-  const [state, action, pending] = useActionState(addLocation, undefined);
+  const [formState, action, pending] = useActionState(addLocation, undefined);
   const [fileCards, setFileCards] = useState<FileCard[]>([]);
-  const tags = ["tag1","tag2","tag3"].map((tag) => {return {optionText: tag, value: tag}});
+  const tagValues = ["tag1","tag2","tag3"].map((tag) => {return {optionText: tag, value: tag}});
+  
+  const name = formState?.fields.name?.toString() || "";
+  const description = formState?.fields.description?.toString() || "";
+  const city = formState?.fields.city?.toString() || "";
+  const state = formState?.fields.state?.toString() || "";
+  const zip = formState?.fields.zip?.toString() || "";
+  const streetAddress = formState?.fields.streetAddress?.toString() || "";
+  const selectedTagValues = formState?.fields.tags.map((tag) => tag.toString());
 
   const handleFilesSelected = (files: File | File[]) => {
     const fileCardsCopy = [...fileCards];
@@ -33,7 +41,7 @@ export default function AddLocationForm() {
   }
 
   const stateOptions = USStates.map((state) => {
-    return { key: state.abbreviation, value: state.name };
+    return { key: state.abbreviation, value: state.abbreviation };
   });
 
   return (
@@ -48,8 +56,10 @@ export default function AddLocationForm() {
           type="text"
           className="input input-lg flex w-full"
           autoComplete="off"
+          defaultValue={name}
+          required={true}
         />
-        <p className="text-error text-sm h-1.5">{state?.errors.name}</p>
+        <p className="text-error text-sm h-1.5">{formState?.errors.name}</p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -62,22 +72,25 @@ export default function AddLocationForm() {
           type="text"
           className="input input-lg flex w-full"
           autoComplete="off"
+          defaultValue={description}
         />
-        <p className="text-error text-sm h-1.5">{state?.errors.description}</p>
+        <p className="text-error text-sm h-1.5">{formState?.errors.description}</p>
       </div>
 
       <div className="flex flex-col mt-4">
-        <label htmlFor="street-address" className="label flex">
+        <label htmlFor="streetAddress" className="label flex">
           Street Address
         </label>
         <input
-          id="street-address"
-          name="street-address"
+          id="streetAddress"
+          name="streetAddress"
           type="text"
           className="input input-lg flex w-full"
           autoComplete="off"
+          defaultValue={streetAddress}
+          required={true}
         />
-        <p className="text-error text-sm h-1.5">{state?.errors.streetAddress}</p>
+        <p className="text-error text-sm h-1.5">{formState?.errors.streetAddress}</p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -90,8 +103,10 @@ export default function AddLocationForm() {
           type="text"
           className="input input-lg flex w-full"
           autoComplete="off"
+          defaultValue={city}
+          required={true}
         />
-        <p className="text-error text-sm h-1.5">{state?.errors.city}</p>
+        <p className="text-error text-sm h-1.5">{formState?.errors.city}</p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -100,11 +115,11 @@ export default function AddLocationForm() {
         </label>
         <Select
           options={stateOptions}
-          defaultValue="Pick a state"
+          defaultValue={state !== "" ? state : "Pick a state"}
           name="state"
           id="state"
         />
-        <p className="text-error text-sm h-1.5">{state?.errors.state}</p>
+        <p className="text-error text-sm h-1.5">{formState?.errors.state}</p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -114,11 +129,13 @@ export default function AddLocationForm() {
         <input
           id="zip"
           name="zip"
-          type="text"
+          type="number"
           className="input input-lg flex w-full"
           autoComplete="off"
+          defaultValue={zip}
+          required={true}
         />
-        <p className="text-error text-sm h-1.5">{state?.errors.zip}</p>
+        <p className="text-error text-sm h-1.5">{formState?.errors.zip}</p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -131,7 +148,7 @@ export default function AddLocationForm() {
 
       <div className="flex flex-col mt-4">
         <label className="label flex">Tags</label>
-        <Multiselect options={tags} formFieldValue="tag" onChange={() => {}} />
+        <Multiselect options={tagValues} selectedValues={selectedTagValues} formFieldValue="tag" onChange={() => {}} />
       </div>
       <div className="flex mt-12 justify-center">
         <button className="btn btn-primary w-full" type="submit" disabled={pending}>
