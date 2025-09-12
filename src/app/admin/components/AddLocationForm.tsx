@@ -9,11 +9,18 @@ import DragDrop from "@/app/components/DragDrop";
 import FileList from "@/app/admin/components/FileList";
 import Multiselect from "@/app/components/form/Multiselect";
 
-export default function AddLocationForm() {
+type Props = {
+  tags?: string[];
+};
+
+export default function AddLocationForm({ tags }: Props) {
   const [formState, action, pending] = useActionState(addLocation, undefined);
   const [fileCards, setFileCards] = useState<FileCard[]>([]);
-  const tagValues = ["tag1","tag2","tag3"].map((tag) => {return {optionText: tag, value: tag}});
-  
+  const tagValues =
+    tags?.map((tag) => {
+      return { optionText: tag, value: tag };
+    }) || [];
+
   const name = formState?.fields.name?.toString() || "";
   const description = formState?.fields.description?.toString() || "";
   const city = formState?.fields.city?.toString() || "";
@@ -24,21 +31,21 @@ export default function AddLocationForm() {
 
   const handleFilesSelected = (files: File | File[]) => {
     const fileCardsCopy = [...fileCards];
-    
+
     // Files are in a FileList object. Since we don't know how many there are,
     // we need to iterate over the object's entries, which are in Record<number, File>
     // format.
     Object.entries(files).forEach((entry) => {
       const fileCard: FileCard = {
         file: entry[1],
-        description: ""
+        description: "",
       };
 
       fileCardsCopy.push(fileCard);
     });
 
     setFileCards(fileCardsCopy);
-  }
+  };
 
   const stateOptions = USStates.map((state) => {
     return { key: state.abbreviation, value: state.abbreviation };
@@ -74,7 +81,9 @@ export default function AddLocationForm() {
           autoComplete="off"
           defaultValue={description}
         />
-        <p className="text-error text-sm h-1.5">{formState?.errors.description}</p>
+        <p className="text-error text-sm h-1.5">
+          {formState?.errors.description}
+        </p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -90,7 +99,9 @@ export default function AddLocationForm() {
           defaultValue={streetAddress}
           required={true}
         />
-        <p className="text-error text-sm h-1.5">{formState?.errors.streetAddress}</p>
+        <p className="text-error text-sm h-1.5">
+          {formState?.errors.streetAddress}
+        </p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -141,17 +152,29 @@ export default function AddLocationForm() {
       <div className="flex flex-col mt-4">
         <label className="label flex">Images</label>
         <div>
-          <DragDrop fileCards={fileCards} onFilesSelected={handleFilesSelected} />
-          <FileList fileCards={fileCards} />  
+          <DragDrop
+            fileCards={fileCards}
+            onFilesSelected={handleFilesSelected}
+          />
+          <FileList fileCards={fileCards} />
         </div>
       </div>
 
       <div className="flex flex-col mt-4">
         <label className="label flex">Tags</label>
-        <Multiselect options={tagValues} selectedValues={selectedTagValues} formFieldValue="tag" onChange={() => {}} />
+        <Multiselect
+          options={tagValues}
+          selectedValues={selectedTagValues}
+          formFieldValue="tag"
+          onChange={() => {}}
+        />
       </div>
       <div className="flex mt-12 justify-center">
-        <button className="btn btn-primary w-full" type="submit" disabled={pending}>
+        <button
+          className="btn btn-primary w-full"
+          type="submit"
+          disabled={pending}
+        >
           Submit
         </button>
       </div>
