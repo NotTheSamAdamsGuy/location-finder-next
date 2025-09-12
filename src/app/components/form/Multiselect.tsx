@@ -5,16 +5,23 @@ export type MultiselectOption = {
   value: string;
 };
 
+/**
+ * A component that allows users to select multiple options using checkboxes.
+ * @param param an object containing configuration parameters
+ * @returns JSX.Element
+ */
 export default function Multiselect({
   options,
+  selectedValues=[],
   formFieldValue,
   onChange,
 }: {
   options: MultiselectOption[];
+  selectedValues?: string[];
   formFieldValue: string;
   onChange: (selectedOptions: string[]) => void;
 }) {
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(selectedValues);
 
   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = evt.target.checked;
@@ -34,7 +41,9 @@ export default function Multiselect({
     onChange(newSelectedOptions);
   };
 
-  const dropdownMessage = `${selectedOptions.length} ${formFieldValue}${selectedOptions.length === 0 || selectedOptions.length > 1 ? "s" : ""} selected`;
+  const dropdownMessage = `${selectedOptions.length} ${formFieldValue}${
+    selectedOptions.length === 0 || selectedOptions.length > 1 ? "s" : ""
+  } selected`;
 
   return (
     <label className="relative">
@@ -44,18 +53,19 @@ export default function Multiselect({
         {dropdownMessage}
       </div>
 
-      <div className="hidden peer-checked:flex absolute w-full bg-white shadow p-2">
+      <div className="hidden peer-checked:flex absolute w-full shadow p-2 bg-[var(--color-base-100)]">
         <ul>
-          {options.map((option, i) => {
+          {options.map((option) => {
             return (
               <li key={option.value}>
-                <label className="label flex whitespace-nowrap cursor-pointer px-2 py-1 transition-colors hover:bg-blue-100 [&:has(input:checked)]:bg-blue-200">
+                <label className="label flex whitespace-nowrap cursor-pointer px-2 py-1 text-[var(--color-base-content)]">
                   <input
                     type="checkbox"
                     name={formFieldValue}
                     value={option.value}
                     className="cursor-pointer checkbox"
                     onChange={handleChange}
+                    defaultChecked={selectedValues.includes(option.value)}
                   />
                   <span className="ml-1">{option.optionText}</span>
                 </label>
