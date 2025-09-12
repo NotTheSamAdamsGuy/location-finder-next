@@ -1,8 +1,8 @@
-"use server"
+"use server";
 
 import { cookies } from "next/headers";
 
-export const getAllTags = async () => {
+export const getAllTags = async (): Promise<string[]> => {
   const token = (await cookies()).get("token")?.value;
 
   const requestOptions = {
@@ -20,7 +20,7 @@ export const getAllTags = async () => {
     );
 
     if (response.ok) {
-      const data = await response.json();
+      const data = ((await response.json()) as string[]) || Array<string>;
       return data;
     } else {
       throw new Error("Unable to retrieve tags");
@@ -29,7 +29,7 @@ export const getAllTags = async () => {
     console.log(err);
     throw err;
   }
-}
+};
 
 export const getTag = async (tagToFind: string) => {
   const token = (await cookies()).get("token")?.value;
@@ -49,7 +49,9 @@ export const getTag = async (tagToFind: string) => {
     );
 
     if (response.ok) {
-      const data = await response.json();
+      const data = (await response.json()) as Promise<
+        string | string[] | null | undefined
+      >;
       return data;
     } else {
       throw new Error("Unable to retrieve tag");
@@ -58,4 +60,4 @@ export const getTag = async (tagToFind: string) => {
     console.log(err);
     throw err;
   }
-}
+};
