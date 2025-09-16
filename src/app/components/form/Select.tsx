@@ -23,6 +23,7 @@ export default function Select({
       className="select w-full"
       name={name}
       id={id}
+      data-testid="select"
     >
       <option disabled={true}>{defaultValue}</option>
       {optionElements}
