@@ -1,13 +1,12 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState } from "react";
 
 import { addLocation } from "@/app/actions/locations";
-import { USStates, FileCard } from "@/app/lib/definitions";
+import { USStates } from "@/app/lib/definitions";
 import Select from "@/app/components/form/Select";
-import DragDrop from "@/app/components/DragDrop";
-import FileList from "@/app/admin/components/FileList";
 import Multiselect from "@/app/components/form/Multiselect";
+import FileUploader from "./FileUploader";
 
 type Props = {
   tags?: string[];
@@ -15,7 +14,6 @@ type Props = {
 
 export default function AddLocationForm({ tags }: Props) {
   const [formState, action, pending] = useActionState(addLocation, undefined);
-  const [fileCards, setFileCards] = useState<FileCard[]>([]);
   const tagValues =
     tags?.map((tag) => {
       return { optionText: tag, value: tag };
@@ -28,24 +26,11 @@ export default function AddLocationForm({ tags }: Props) {
   const zip = formState?.fields.zip?.toString() || "";
   const streetAddress = formState?.fields.streetAddress?.toString() || "";
   const selectedTagValues = formState?.fields.tags.map((tag) => tag.toString());
-
-  const handleFilesSelected = (files: File | File[]) => {
-    const fileCardsCopy = [...fileCards];
-
-    // Files are in a FileList object. Since we don't know how many there are,
-    // we need to iterate over the object's entries, which are in Record<number, File>
-    // format.
-    Object.entries(files).forEach((entry) => {
-      const fileCard: FileCard = {
-        file: entry[1],
-        description: "",
-      };
-
-      fileCardsCopy.push(fileCard);
-    });
-
-    setFileCards(fileCardsCopy);
-  };
+  const imageDescriptions = formState?.fields.imageDescriptions as string[] || [];
+  
+  // TODO: figure out how to get image files from form state so we can load the data after
+  // server-side form validation failure. Setting the value to undefined for now.
+  const imageFiles = undefined;
 
   const stateOptions = USStates.map((state) => {
     return { key: state.abbreviation, value: state.abbreviation };
@@ -152,11 +137,12 @@ export default function AddLocationForm({ tags }: Props) {
       <div className="flex flex-col mt-4">
         <label className="label flex">Images</label>
         <div>
-          <DragDrop
-            fileCards={fileCards}
-            onFilesSelected={handleFilesSelected}
+          <FileUploader
+            inputName="images"
+            formStateFiles={imageFiles}
+            formStateDescriptions={imageDescriptions}
+            multiple={true}
           />
-          <FileList fileCards={fileCards} />
         </div>
       </div>
 
@@ -166,7 +152,6 @@ export default function AddLocationForm({ tags }: Props) {
           options={tagValues}
           selectedValues={selectedTagValues}
           formFieldValue="tag"
-          onChange={() => {}}
         />
       </div>
       <div className="flex mt-12 justify-center">

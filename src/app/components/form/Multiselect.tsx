@@ -19,7 +19,7 @@ export default function Multiselect({
   options: MultiselectOption[];
   selectedValues?: string[];
   formFieldValue: string;
-  onChange: (selectedOptions: string[]) => void;
+  onChange?: (selectedOptions: string[]) => void;
 }) {
   const [selectedOptions, setSelectedOptions] = useState<string[]>(selectedValues);
 
@@ -38,7 +38,8 @@ export default function Multiselect({
     const newSelectedOptions = Array.from(selectedOptionSet);
 
     setSelectedOptions(newSelectedOptions);
-    onChange(newSelectedOptions);
+    
+    if (onChange) onChange(newSelectedOptions);
   };
 
   const dropdownMessage = `${selectedOptions.length} ${formFieldValue}${
