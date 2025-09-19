@@ -26,8 +26,10 @@ export default function AddLocationForm({ tags }: Props) {
   const zip = formState?.fields.zip?.toString() || "";
   const streetAddress = formState?.fields.streetAddress?.toString() || "";
   const selectedTagValues = formState?.fields.tags.map((tag) => tag.toString());
-  const imageDescriptions = formState?.fields.imageDescriptions as string[] || [];
-  
+  const imageDescriptions =
+    (formState?.fields.imageDescriptions as string[]) || [];
+  const displayOnSite = formState?.fields.displayOnSite === "on" ? true : false;
+
   // TODO: figure out how to get image files from form state so we can load the data after
   // server-side form validation failure. Setting the value to undefined for now.
   const imageFiles = undefined;
@@ -154,7 +156,20 @@ export default function AddLocationForm({ tags }: Props) {
           formFieldValue="tag"
         />
       </div>
-      <div className="flex mt-12 justify-center">
+
+      <label className="label mt-8">
+        <input
+          type="checkbox"
+          defaultChecked={displayOnSite}
+          className="toggle checked:bg-secondary checked:text-white checked:border-black"
+          id="displayOnSite"
+          name="displayOnSite"
+        />
+        Display on site
+      </label>
+      <p className="text-error text-sm h-1.5">{formState?.errors.displayOnSite}</p>
+
+      <div className="flex mt-8 justify-center">
         <button
           className="btn btn-primary w-full"
           type="submit"
