@@ -26,7 +26,8 @@ const AddLocationFormSchema = z.object({
   state: z.string("State is required").trim(),
   zip: z.string().trim().min(1, "ZIP code is required"),
   tags: z.array(z.string()),
-  imageDescriptions: z.array(z.string())
+  imageDescriptions: z.array(z.string()),
+  displayOnSite: z.union([z.string(), z.null()])
 });
 
 /**
@@ -48,7 +49,8 @@ export const addLocation = async (
     state: formData.get("state"),
     zip: formData.get("zip"),
     tags: formData.getAll("tag"),
-    imageDescriptions: formData.getAll("imageDescription")
+    imageDescriptions: formData.getAll("imageDescription"),
+    displayOnSite: formData.get("displayOnSite")
   });
 
   // If any form fields are invalid, return early
@@ -63,12 +65,13 @@ export const addLocation = async (
         state: formData.get("state"),
         zip: formData.get("zip"),
         tags: formData.getAll("tag"),
-        imageDescriptions: formData.getAll("imageDescription")
+        imageDescriptions: formData.getAll("imageDescription"),
+        displayOnSite: formData.get("displayOnSite")
       },
     };
   }
 
-  const { name, description, streetAddress, city, state, zip, tags, imageDescriptions } =
+  const { name, description, streetAddress, city, state, zip, tags, imageDescriptions, displayOnSite } =
     validatedFields.data;
 
   // attempt to post data to the server
@@ -79,6 +82,10 @@ export const addLocation = async (
   postData.append("city", city);
   postData.append("state", state);
   postData.append("zip", zip);
+
+  // display on site toggle has values of null or "on" instead of true/false, so we need to fix this
+  const correctedDisplayOnSite = displayOnSite === "on" ? true : false;
+  postData.append("displayOnSite", `${correctedDisplayOnSite}`);
 
   tags.forEach((tag) => {
     postData.append("tag", tag);
