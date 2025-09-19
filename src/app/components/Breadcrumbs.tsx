@@ -12,7 +12,7 @@ export type BreadcrumbData = {
 
 export default function Breadcrumbs({
   type,
-  className="text-sm bg-gray-100 px-3 border-0 border-gray-300 border-b border-t"
+  className="text-sm bg-base-300 px-3 border-0 border-base-300 border-b border-t"
 }: {
   type: "admin" | "site",
   className?: string
