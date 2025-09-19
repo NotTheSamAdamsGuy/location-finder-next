@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 
-export const getAllLocations = async () => {
+import { Location } from "../lib/definitions";
+
+export const getAllLocations = async (): Promise<Location[]> => {
   const token = (await cookies()).get("token")?.value;
 
   const requestOptions = {

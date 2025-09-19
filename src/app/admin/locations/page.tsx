@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 
-import { Location, TableData } from "@/app/lib/definitions";
-import { BasicTable } from "@/app/components/tables/BasicTable";
+import LocationsTable from "../components/LocationsTable";
 import { verifySession } from "@/app/lib/session";
 import { getAllLocations } from "@/app/data/locations";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
@@ -14,19 +13,7 @@ export default async function LocationsAdminPage() {
     forbidden();
   }
 
-  // TODO: replace the BasicTable with a better component
-  const locations: Location[] = await getAllLocations();
-
-  const mapLocationsToTableData = (locs: Location[]): TableData => {
-    const headers = ["Name", "Description"];
-    const values = locs.map((location) => {
-      return [location.name, location.description];
-    });
-
-    return { headers: headers, values: values };
-  };
-
-  const tableData: TableData = mapLocationsToTableData(locations);
+  const locations = await getAllLocations();
 
   return (
     <div>
@@ -39,7 +26,7 @@ export default async function LocationsAdminPage() {
           <Link className="btn btn-primary w-full" href="/admin/locations/add">
             Add a Location
           </Link>
-          <BasicTable data={tableData} />
+          <LocationsTable data={locations} />
         </div>
       </div>
     </div>
