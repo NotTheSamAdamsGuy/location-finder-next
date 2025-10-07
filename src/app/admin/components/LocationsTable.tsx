@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { ClientTable } from "@/app/components/tables/ClientTable";
 import { TableData, Location } from "@/app/lib/definitions";
-// import { deleteLocation } from "@/app/actions/locations";
+import { deleteLocation } from "@/app/actions/locations";
 import ActionControls from "./ActionControls";
 
 export default function LocationsTable({ data }: { data: Location[] }) {
@@ -13,7 +13,7 @@ export default function LocationsTable({ data }: { data: Location[] }) {
 
   const handleDeleteClick = async (locationId: string) => {
     // send request to delete location
-    // await deleteLocation(location.id);
+    await deleteLocation(locationId);
 
     // clear removed location from state data
     const filteredLocs = [...locs].filter((loc) => loc.id !== locationId);
