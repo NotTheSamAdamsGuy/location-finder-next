@@ -26,6 +26,23 @@ const AddLocationFormSchema = z.object({
   state: z.string("State is required").trim(),
   zip: z.string().trim().min(1, "ZIP code is required"),
   tags: z.array(z.string()),
+  filenames: z.array(z.string()),
+  originalFilenames: z.array(z.string()),
+  imageDescriptions: z.array(z.string()),
+  displayOnSite: z.union([z.string(), z.null()])
+});
+
+const UpdateLocationFormSchema = z.object({
+  id: z.string(),
+  name: z.string().trim().min(1, "Name is required"),
+  description: z.string().trim(),
+  streetAddress: z.string().trim().min(1, "Street address is required"),
+  city: z.string().trim().min(1, "City is required"),
+  state: z.string("State is required").trim(),
+  zip: z.string().trim().min(1, "ZIP code is required"),
+  tags: z.array(z.string()),
+  filenames: z.array(z.string()),
+  originalFilenames: z.array(z.string()),
   imageDescriptions: z.array(z.string()),
   displayOnSite: z.union([z.string(), z.null()])
 });
@@ -49,6 +66,8 @@ export const addLocation = async (
     state: formData.get("state"),
     zip: formData.get("zip"),
     tags: formData.getAll("tag"),
+    filenames: formData.getAll("filename"),
+    originalFilenames: formData.getAll("originalFilename"),
     imageDescriptions: formData.getAll("imageDescription"),
     displayOnSite: formData.get("displayOnSite")
   });
@@ -58,6 +77,7 @@ export const addLocation = async (
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       fields: {
+        id: formData.get("id"),
         name: formData.get("name"),
         description: formData.get("description"),
         streetAddress: formData.get("streetAddress"),
@@ -65,13 +85,15 @@ export const addLocation = async (
         state: formData.get("state"),
         zip: formData.get("zip"),
         tags: formData.getAll("tag"),
+        filenames: formData.getAll("filename"),
+        originalFilenames: formData.getAll("originalFilename"),
         imageDescriptions: formData.getAll("imageDescription"),
         displayOnSite: formData.get("displayOnSite")
       },
     };
   }
 
-  const { name, description, streetAddress, city, state, zip, tags, imageDescriptions, displayOnSite } =
+  const { name, description, streetAddress, city, state, zip, tags, filenames, originalFilenames, imageDescriptions, displayOnSite } =
     validatedFields.data;
 
   // attempt to post data to the server
@@ -89,6 +111,14 @@ export const addLocation = async (
 
   tags.forEach((tag) => {
     postData.append("tag", tag);
+  });
+
+  filenames.forEach((filename) => {
+    postData.append("filename", filename);
+  });
+
+  originalFilenames.forEach((originalFilename) => {
+    postData.append("originalFilename", originalFilename);
   });
 
   imageDescriptions.forEach((imageDescription) => {
@@ -141,5 +171,135 @@ export const addLocation = async (
   } else {
     const data = await response.json();
     throw new Error(`Unable to add new location. ${data.message}`);
+  }
+};
+
+/**
+ * Update a location in the database if the provided values are valid, otherwise return error messages
+ * @param formState an AddLocationFormState object containing error messages or undefined
+ * @param formData form data submitted by the user
+ * @returns a Promise resolving to an AddLocationFormState object
+ */
+export const updateLocation = async (
+  formState: AddLocationFormState,
+  formData: FormData
+) => {
+  console.log(formData);
+  // validate form fields
+  const validatedFields = UpdateLocationFormSchema.safeParse({
+    id: formData.get("id"),
+    name: formData.get("name"),
+    description: formData.get("description"),
+    streetAddress: formData.get("streetAddress"),
+    city: formData.get("city"),
+    state: formData.get("state"),
+    zip: formData.get("zip"),
+    tags: formData.getAll("tag"),
+    filenames: formData.getAll("filename"),
+    originalFilenames: formData.getAll("originalFilename"),
+    imageDescriptions: formData.getAll("imageDescription"),
+    displayOnSite: formData.get("displayOnSite")
+  });
+
+  // If any form fields are invalid, return early
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      fields: {
+        id: formData.get("id"),
+        name: formData.get("name"),
+        description: formData.get("description"),
+        streetAddress: formData.get("streetAddress"),
+        city: formData.get("city"),
+        state: formData.get("state"),
+        zip: formData.get("zip"),
+        tags: formData.getAll("tag"),
+        filenames: formData.getAll("filename"),
+        originalFilenames: formData.getAll("originalFilename"),
+        imageDescriptions: formData.getAll("imageDescription"),
+        displayOnSite: formData.get("displayOnSite")
+      },
+    };
+  }
+
+  const { id, name, description, streetAddress, city, state, zip, tags, filenames, originalFilenames, imageDescriptions, displayOnSite } =
+    validatedFields.data;
+
+  // attempt to submit data to the server
+  const putData: FormData = new FormData();
+  putData.append("id", id);
+  putData.append("name", name);
+  putData.append("description", description);
+  putData.append("streetAddress", streetAddress);
+  putData.append("city", city);
+  putData.append("state", state);
+  putData.append("zip", zip);
+
+  // display on site toggle has values of null or "on" instead of true/false, so we need to fix this
+  const correctedDisplayOnSite = displayOnSite === "on" ? true : false;
+  putData.append("displayOnSite", `${correctedDisplayOnSite}`);
+
+  tags.forEach((tag) => {
+    putData.append("tag", tag);
+  });
+
+  filenames.forEach((filename) => {
+    putData.append("filename", filename);
+  });
+
+  originalFilenames.forEach((originalFilename) => {
+    putData.append("originalFilename", originalFilename);
+  });
+
+  imageDescriptions.forEach((imageDescription) => {
+    putData.append("imageDescription", imageDescription);
+  });
+
+  // something is causing Zod validation to throw an error when we try to use
+  // it for Files, so for now we are skipping validation and adding files. It
+  // could be related to the DragDrop component.
+  for (const [key, value] of formData.entries()) {
+    if (
+      key === "images" &&
+      (value as File).size > 0 &&
+      (value as File).name !== undefined
+    ) {
+      putData.append("images", value);
+    }
+  }
+
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: putData,
+  };
+
+  // we can't include a redirect in a try/catch block, so use a variable to track if we should redirect
+  let success = false;
+  let response;
+
+  try {
+    response = await fetch(
+      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/locations`,
+      requestOptions
+    );
+
+    if (response.ok) {
+      success = true;
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+
+  if (success) {
+    redirect("/admin/locations");
+  } else {
+    const data = await response.json();
+    throw new Error(`Unable to update location. ${data.message}`);
   }
 };

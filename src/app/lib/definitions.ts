@@ -25,7 +25,7 @@ export type Location = {
   description: string;
   images: Image[];
   tags?: string[];
-  displayOnSite?: boolean;
+  displayOnSite: boolean;
 };
 
 export type Coordinates = {

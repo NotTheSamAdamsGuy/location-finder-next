@@ -1,6 +1,6 @@
 import { forbidden } from "next/navigation";
 
-import AddLocationForm from "@/app/admin/components/AddLocationForm";
+import LocationForm from "@/app/admin/components/LocationForm";
 import PageHeader from "@/app/admin/components/PageHeader";
 import { verifySession } from "@/app/lib/session";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
@@ -20,7 +20,7 @@ export default async function AddLocationAdminPage() {
       <div className="px-3 py-1.5">
         <PageHeader title="Add a Location" />
         <div className="my-3">
-          <AddLocationForm tags={tags} />
+          <LocationForm tags={tags} type="add" />
         </div>
       </div>
     </div>

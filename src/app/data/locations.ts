@@ -30,3 +30,35 @@ export const getAllLocations = async (): Promise<Location[]> => {
     throw err;
   }
 };
+
+export const getLocation = async (id: string) => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    const response = await fetch(
+      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/locations/${id}`,
+      requestOptions
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      if (response.status === 404) {
+        return null;
+      }
+      throw new Error("Unable to retrieve location");
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};

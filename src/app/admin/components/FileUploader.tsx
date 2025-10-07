@@ -16,6 +16,20 @@ type FileUploaderProps = {
   formStateFiles?: File[];
   formStateDescriptions?: string[];
   multiple: boolean;
+  items?: FileUploaderItem[];
+  buttonLabel?: string;
+};
+
+/**
+ * @typedef {Object} FileUploaderItem
+ * @property {string} displayName The name the file had when it was uploaded.
+ * @property {string} fileName The current name of the file.
+ * @property {string} description A description of the file.
+ */
+export type FileUploaderItem = {
+  displayName: string;
+  fileName: string;
+  description: string;
 };
 
 /**
@@ -26,22 +40,21 @@ type FileUploaderProps = {
 export default function FileUploader({
   inputName,
   formStateFiles,
-  formStateDescriptions,
   multiple = false,
+  items = [],
+  buttonLabel = "Click here to add files",
 }: FileUploaderProps) {
   const fileInputRef = useRef(null);
   const [files, setFiles] = useState<File[] | undefined>(formStateFiles);
+  const [listItems, setListItems] = useState<FileUploaderItem[]>(items);
 
-  const fileCardInputs = !files
-    ? []
-    : files?.map((file, index) => {
-        const description =
-          formStateDescriptions && formStateDescriptions[index]
-            ? formStateDescriptions[index]
-            : "";
-
-        return { file: file, description: description };
-      });
+  const fileCardInputs = listItems.map((item) => {
+    return {
+      fileName: item.fileName,
+      displayName: item.displayName,
+      description: item.description,
+    };
+  });
 
   /**
    * Add one or more files to state and update the files in the File input's FileList
@@ -52,15 +65,23 @@ export default function FileUploader({
     const fileList = fileInput.files;
     const dataTransfer = new DataTransfer();
     const tempFiles = files ? [...files] : [];
+    const tempListItems = [...listItems];
 
     if (fileList) {
       for (const file of fileList) {
         dataTransfer.items.add(file);
         tempFiles.push(file);
+
+        tempListItems.push({
+          fileName: file.name,
+          displayName: file.name,
+          description: "",
+        });
       }
       fileInput.files = dataTransfer.files;
       // figure out if this needs to be outside the if block
       setFiles(tempFiles);
+      setListItems(tempListItems);
     }
   };
 
@@ -71,25 +92,36 @@ export default function FileUploader({
   const removeFile = (evt: React.MouseEvent<HTMLButtonElement>) => {
     const nameOfFileToRemove = evt.currentTarget.dataset["filename"];
     let tempFiles: File[] = [];
+    let tempListItems: FileUploaderItem[] = [];
 
-    if (nameOfFileToRemove && files) {
-      tempFiles = files.filter((file) => file.name !== nameOfFileToRemove);
-    }
+    if (nameOfFileToRemove) {
+      // If a file has been selected but not yet uploaded, we want to remove it from the array of files so that
+      // it doesn't get uploaded when the form is submitted.
+      if (files) {
+        tempFiles = files.filter((file) => file.name !== nameOfFileToRemove);
 
-    const dataTransfer = new DataTransfer();
-    tempFiles.forEach((file) => dataTransfer.items.add(file));
+        const dataTransfer = new DataTransfer();
+        tempFiles.forEach((file) => dataTransfer.items.add(file));
 
-    if (fileInputRef.current) {
-      const fileInput = fileInputRef.current as HTMLInputElement;
-      fileInput.files = dataTransfer.files;
-      setFiles(tempFiles);
+        if (fileInputRef.current) {
+          const fileInput = fileInputRef.current as HTMLInputElement;
+          fileInput.files = dataTransfer.files;
+          setFiles(tempFiles);
+        }
+      }
+
+      // Now we can remove the list item from the UI so that the form fields are not uploaded
+      tempListItems = listItems.filter(
+        (item) => item.fileName !== nameOfFileToRemove
+      );
+      setListItems(tempListItems);
     }
   };
 
   /**
    * Trigger the click event of the hidden File input
    */
-  const handleAddImageClick = () => {
+  const handleAddFileClick = () => {
     if (fileInputRef.current) {
       const fileInput = fileInputRef.current as HTMLInputElement;
       fileInput.click();
@@ -101,9 +133,9 @@ export default function FileUploader({
       <button
         type="button"
         className="btn btn-secondary w-full mb-3"
-        onClick={handleAddImageClick}
+        onClick={handleAddFileClick}
       >
-        Click here to add images
+        {buttonLabel}
       </button>
       <input
         type="file"
@@ -126,10 +158,11 @@ export default function FileUploader({
 /**
  * @typedef {Object} FileCardListItem
  * @property {File} file - A file to upload.
- * @property {string} description - An optional description of the file. 
+ * @property {string} description - An optional description of the file.
  */
 type FileCardListItem = {
-  file: File;
+  fileName: string;
+  displayName: string;
   description?: string;
 };
 
@@ -149,16 +182,19 @@ type FileCardListProps = {
  * @returns {JSX.Element}
  */
 function FileCardList({ items, onRemoveFileCard }: FileCardListProps) {
-  const fileCards = items.map(({ file, description }, index) => {
-    return (
-      <FileCard
-        key={`file-card-${index - 1}`}
-        file={file}
-        description={description}
-        onRemoveClick={onRemoveFileCard}
-      />
-    );
-  });
+  const fileCards = items.map(
+    ({ fileName, displayName, description }, index) => {
+      return (
+        <FileCard
+          key={`file-card-${index - 1}`}
+          fileName={fileName}
+          displayName={displayName}
+          description={description}
+          onRemoveClick={onRemoveFileCard}
+        />
+      );
+    }
+  );
 
   return (
     <div className="flex flex-col gap-y-3 p-3 border border-gray-200 rounded bg-[repeating-linear-gradient(45deg,_#e1e1e1_0,_#e1e1e1_1px,_transparent_0,_transparent_50%)] bg-[size:10px_10px]">
@@ -179,22 +215,29 @@ function FileCardList({ items, onRemoveFileCard }: FileCardListProps) {
 
 /**
  * @typedef {Object} FileCardProps
- * @property {file} file - A file selected for upload.
+ * @property {fileName} fileName - The name of the file.
+ * @property {displayName} displayName - The display name for the file.
  * @property {string} description - An optional description for the file.
  * @property {function (React.MouseEvent<HTMLButtonElement>)} - Callback called when the 'X' button is clicked.
  */
 type FileCardProps = {
-  file: File;
+  fileName: string;
+  displayName: string;
   description?: string;
   onRemoveClick: (evt: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 /**
  * A card component containing file information.
- * @param {FileCardProps} props - The component's props. 
+ * @param {FileCardProps} props - The component's props.
  * @returns {JSX.Element}
  */
-function FileCard({ file, description = "", onRemoveClick }: FileCardProps) {
+function FileCard({
+  fileName,
+  displayName,
+  description = "",
+  onRemoveClick,
+}: FileCardProps) {
   const handleRemoveClick = (evt: React.MouseEvent<HTMLButtonElement>) => {
     onRemoveClick(evt);
   };
@@ -202,14 +245,14 @@ function FileCard({ file, description = "", onRemoveClick }: FileCardProps) {
   return (
     <div className="card w-full bg-base-100 card-xs border border-gray-300 shadow-sm">
       <div className="card-body">
-        <h2 className="card-title">{file.name}</h2>
+        <h2 className="card-title">{displayName}</h2>
         <div className="absolute top-2 right-2">
           <button
             type="button"
             onClick={handleRemoveClick}
-            data-filename={file.name}
+            data-filename={fileName}
             className="cursor-pointer"
-            title={`Remove ${file.name}`}
+            title={`Remove ${displayName}`}
           >
             <FontAwesomeIcon className="fa-lg" icon={faXmark} />
           </button>
@@ -221,6 +264,12 @@ function FileCard({ file, description = "", onRemoveClick }: FileCardProps) {
             className="input input-sm w-full"
             name="imageDescription"
             defaultValue={description}
+          />
+          <input type="hidden" name="filename" defaultValue={fileName} />
+          <input
+            type="hidden"
+            name="originalFilename"
+            defaultValue={displayName}
           />
         </div>
       </div>
