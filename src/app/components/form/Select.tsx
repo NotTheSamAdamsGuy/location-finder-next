@@ -25,7 +25,7 @@ export default function Select({
       id={id}
       data-testid="select"
     >
-      <option disabled={true}>{defaultValue}</option>
+      <option disabled={true}>Select an option</option>
       {optionElements}
     </select>
   );

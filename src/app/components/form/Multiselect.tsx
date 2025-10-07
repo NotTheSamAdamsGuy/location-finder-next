@@ -54,7 +54,7 @@ export default function Multiselect({
         {dropdownMessage}
       </div>
 
-      <div className="hidden peer-checked:flex absolute w-full shadow p-2 bg-[var(--color-base-100)]">
+      <div className="hidden peer-checked:flex absolute w-full shadow p-2 bg-[var(--color-base-100)] z-10">
         <ul>
           {options.map((option) => {
             return (

@@ -2,44 +2,67 @@
 
 import { useActionState } from "react";
 
-import { addLocation } from "@/app/actions/locations";
+import { addLocation, updateLocation} from "@/app/actions/locations";
 import { USStates } from "@/app/lib/definitions";
 import Select from "@/app/components/form/Select";
 import Multiselect from "@/app/components/form/Multiselect";
-import FileUploader from "./FileUploader";
+import FileUploader, { FileUploaderItem } from "./FileUploader";
+import { Location } from "@/app/lib/definitions";
 
-type Props = {
+type LocationFormProps = {
   tags?: string[];
+  location?: Location;
+  type: string;
 };
 
-export default function AddLocationForm({ tags }: Props) {
-  const [formState, action, pending] = useActionState(addLocation, undefined);
-  const tagValues =
+export default function LocationForm({ tags, location, type }: LocationFormProps) {
+  const formAction = type === "update" ? updateLocation : addLocation;
+  const [formState, action, pending] = useActionState(formAction, undefined);
+
+  const tagOptions =
     tags?.map((tag) => {
       return { optionText: tag, value: tag };
     }) || [];
-
-  const name = formState?.fields.name?.toString() || "";
-  const description = formState?.fields.description?.toString() || "";
-  const city = formState?.fields.city?.toString() || "";
-  const state = formState?.fields.state?.toString() || "";
-  const zip = formState?.fields.zip?.toString() || "";
-  const streetAddress = formState?.fields.streetAddress?.toString() || "";
-  const selectedTagValues = formState?.fields.tags.map((tag) => tag.toString());
-  const imageDescriptions =
-    (formState?.fields.imageDescriptions as string[]) || [];
-  const displayOnSite = formState?.fields.displayOnSite === "on" ? true : false;
-
-  // TODO: figure out how to get image files from form state so we can load the data after
-  // server-side form validation failure. Setting the value to undefined for now.
-  const imageFiles = undefined;
 
   const stateOptions = USStates.map((state) => {
     return { key: state.abbreviation, value: state.abbreviation };
   });
 
+  // prioritize formState values over values passed in as location props; fallback to blank/empty/false values.
+  const id = formState?.fields.id?.toString() || location?.id || "";
+  const name = formState?.fields.name?.toString() || location?.name || "";
+  const description =
+    formState?.fields.description?.toString() || location?.description || "";
+  const city = formState?.fields.city?.toString() || location?.city || "";
+  const state = formState?.fields.state?.toString() || location?.state || "";
+  const zip = formState?.fields.zip?.toString() || location?.zip || "";
+  const streetAddress =
+    formState?.fields.streetAddress?.toString() ||
+    location?.streetAddress ||
+    "";
+  const selectedTags =
+    formState?.fields.tags.map((tag) => tag.toString()) || location?.tags || [];
+    
+  const displayOnSite =
+    formState?.fields.displayOnSite === "on"
+      ? true
+      : false || location?.displayOnSite || false;
+
+  let fileUploaderItems: FileUploaderItem[] = [];
+
+  if (location) {
+    fileUploaderItems = location?.images.map((image) => {
+      return {
+        fileName: image.filename,
+        displayName: image.originalFilename,
+        description: image.description || "",
+      };
+    });
+  }
+
   return (
     <form action={action} className="flex flex-col w-full">
+      <input type="hidden" name="id" defaultValue={id} />
       <div className="flex flex-col">
         <label className="label flex" htmlFor="name">
           Location name
@@ -113,7 +136,7 @@ export default function AddLocationForm({ tags }: Props) {
         </label>
         <Select
           options={stateOptions}
-          defaultValue={state !== "" ? state : "Pick a state"}
+          defaultValue={state !== "" ? state : "Select an option"}
           name="state"
           id="state"
         />
@@ -141,9 +164,9 @@ export default function AddLocationForm({ tags }: Props) {
         <div>
           <FileUploader
             inputName="images"
-            formStateFiles={imageFiles}
-            formStateDescriptions={imageDescriptions}
+            items={fileUploaderItems}
             multiple={true}
+            buttonLabel = "Click here to add images"
           />
         </div>
       </div>
@@ -151,8 +174,8 @@ export default function AddLocationForm({ tags }: Props) {
       <div className="flex flex-col mt-4">
         <label className="label flex">Tags</label>
         <Multiselect
-          options={tagValues}
-          selectedValues={selectedTagValues}
+          options={tagOptions}
+          selectedValues={selectedTags}
           formFieldValue="tag"
         />
       </div>
@@ -167,7 +190,9 @@ export default function AddLocationForm({ tags }: Props) {
         />
         Display on site
       </label>
-      <p className="text-error text-sm h-1.5">{formState?.errors.displayOnSite}</p>
+      <p className="text-error text-sm h-1.5">
+        {formState?.errors.displayOnSite}
+      </p>
 
       <div className="flex mt-8 justify-center">
         <button

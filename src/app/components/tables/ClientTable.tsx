@@ -36,7 +36,7 @@ export function ClientTable({
   return (
     <table className="table table-zebra border border-base-300 mt-3">
       <Thead headers={data.headers} />
-      <Tbody values={pages[currentPage]} />
+      <Tbody values={pages[currentPage] || []} />
       <Tfooter footers={data.footers} />
     </table>
   );
