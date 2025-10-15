@@ -18,7 +18,7 @@ export default async function AddUserAdminPage() {
       <div className="px-3 py-1.5">
         <PageHeader title="Add a User" />
         <div className="my-3">
-          <UserForm type="add" />
+          <UserForm />
         </div>
       </div>
     </div>

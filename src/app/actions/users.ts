@@ -25,6 +25,42 @@ const UserFormSchema = z.object({
   role: z.string().trim().nonempty("Role is required"),
 });
 
+type UpdateUserFormState =
+  | {
+      errors?: {
+        password?: string[];
+        newPassword?: string[];
+        firstName?: string[];
+        lastName?: string[];
+        role?: string[];
+      };
+      message?: string;
+    }
+  | undefined;
+
+const UpdateUserFormSchema = z.object({
+  password: z.string(),
+  newPassword: z.string(),
+  firstName: z.string().trim().nonempty("First Name is required"),
+  lastName: z.string().trim().nonempty("Last Name is required"),
+  role: z.string().trim().nonempty("Role is required"),
+}).superRefine((data, ctx) => {
+  if (data.password !== "" && data.newPassword === "") {
+    ctx.addIssue({
+      code: "custom",
+      message: "New Password is required when a password is provided.",
+      path: ['newPassword']
+    });
+  }
+  if (data.password === "" && data.newPassword !== "") {
+    ctx.addIssue({
+      code: "custom",
+      message: "Existing password is required when a new password is provided.",
+      path: ['password']
+    });
+  }
+});
+
 /**
  * Add a user to the database if the provided values are valid, otherwise return error messages
  * @param formState an UserFormState object containing error messages or undefined
@@ -111,13 +147,13 @@ export const addUser = async (
  * @returns a Promise resolving to an UserFormState object
  */
 export const updateUser = async (
-  formState: UserFormState,
+  formState: UpdateUserFormState,
   formData: FormData
 ) => {
   // validate form fields
-  const validatedFields = UserFormSchema.safeParse({
-    username: formData.get("username"),
+  const validatedFields = UpdateUserFormSchema.safeParse({
     password: formData.get("password"),
+    newPassword: formData.get("newPassword"),
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
     role: formData.get("role"),
@@ -128,8 +164,8 @@ export const updateUser = async (
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       fields: {
-        username: formData.get("username"),
         password: formData.get("password"),
+        newPassword: formData.get("newPassword"),
         firstName: formData.get("firstName"),
         lastName: formData.get("lastName"),
         role: formData.get("role")
@@ -137,12 +173,12 @@ export const updateUser = async (
     };
   }
 
-  const { username, password, firstName, lastName, role } = validatedFields.data;
+  const { password, newPassword, firstName, lastName, role } = validatedFields.data;
 
-  // attempt to post data to the server
   const putData = {
-    username: username,
+    username: formData.get("username"),
     password: password,
+    newPassword: newPassword,
     firstName: firstName,
     lastName: lastName,
     role: role
