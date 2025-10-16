@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { ClientTable } from "@/app/components/tables/ClientTable";
 import { TableData } from "@/app/lib/definitions";
-// import { deleteLocation } from "@/app/actions/locations";
+import { deleteUser } from "@/app/actions/users";
 import ActionControls from "./ActionControls";
 
 export default function UsersTable({ data }: { data: string[] }) {
@@ -13,7 +13,7 @@ export default function UsersTable({ data }: { data: string[] }) {
 
   const handleDeleteClick = async (username: string) => {
     // send request to delete user
-    // await deleteUser(username);
+    await deleteUser(username);
 
     // clear removed user from state data
     const filteredUsernames = [...usernames].filter((name) => name !== username);

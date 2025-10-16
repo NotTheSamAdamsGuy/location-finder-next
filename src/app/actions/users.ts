@@ -218,3 +218,39 @@ export const updateUser = async (
     throw new Error("Unable to update user");
   }
 };
+
+export const deleteUser = async (username: string) => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  let response;
+  let success = false;
+
+  try {
+    response = await fetch(
+      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/users/${username}`,
+      requestOptions
+    );
+
+    if (response.ok) {
+      success = true;
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+
+  if (success) {
+    return;
+  } else {
+    const data = await response.json();
+    throw new Error(`Unable to delete user. ${data.message}`);
+  }
+};
