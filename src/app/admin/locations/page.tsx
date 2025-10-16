@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 
-import LocationsTable from "../components/LocationsTable";
+import LocationsTable from "@/app/admin/locations/components/LocationsTable";
 import { verifySession } from "@/app/lib/session";
 import { getAllLocations } from "@/app/data/locations";
 import Breadcrumbs from "@/app/components/Breadcrumbs";

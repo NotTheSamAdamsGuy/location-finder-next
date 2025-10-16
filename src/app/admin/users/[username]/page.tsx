@@ -4,7 +4,7 @@ import PageHeader from "@/app/admin/components/PageHeader";
 import { verifySession } from "@/app/lib/session";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import { getUserProfile } from "@/app/data/users";
-import UpdateUserForm from "@/app/admin/components/UpdateUserForm";
+import UpdateUserForm from "@/app/admin/users/components/UpdateUserForm";
 
 export default async function UpdateUserAdminPage({
   params,

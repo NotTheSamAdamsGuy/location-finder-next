@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import Breadcrumbs from "@/app/components/Breadcrumbs";
-import UsersTable from "@/app/admin/components/UsersTable";
+import UsersTable from "@/app/admin/users/components/UsersTable";
 import { getAllUsernames } from "@/app/data/users";
 import { verifySession } from "@/app/lib/session";
 import { forbidden } from "next/navigation";
