@@ -112,7 +112,7 @@ export const updateTag = async (
   const { tag, currentTag } = validatedFields.data;
 
   // attempt to post data to the server
-  const postData = {
+  const putData = {
     newTag: tag,
     currentTag: currentTag,
   };
@@ -125,7 +125,7 @@ export const updateTag = async (
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(postData),
+    body: JSON.stringify(putData),
   };
 
   // we can't include a redirect in a try/catch block, so use a variable to track if we should redirect

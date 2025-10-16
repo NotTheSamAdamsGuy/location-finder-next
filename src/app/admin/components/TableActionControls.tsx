@@ -2,14 +2,14 @@ import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 
-type ActionControlProps = {
+type TableActionControlProps = {
   itemId: string;
   itemName?: string;
   editLinkUrl: string;
   onDeleteClick: (itemId: string) => void;
 }
 
-export default function ActionControls({itemId, itemName, editLinkUrl, onDeleteClick}: ActionControlProps) {
+export default function TableActionControls({itemId, itemName, editLinkUrl, onDeleteClick}: TableActionControlProps) {
   const handleDeleteClick = (itemId: string, itemName?: string) => {
     // prompt user to verify they really want to delete the item
     const confirmation = confirm(

@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import { ClientTable } from "@/app/components/tables/ClientTable";
 import { TableData } from "@/app/lib/definitions";
-import { deleteTag } from "@/app/actions/tags";
-import ActionControls from "./ActionControls";
+import { deleteTag } from "@/app/admin/tags/formActions";
+import TableActionControls from "@/app/admin/components/TableActionControls";
 
 export default function TagsTable({ data }: { data: string[] }) {
   const [tags, setTags] = useState<string[]>(data);
@@ -28,7 +28,7 @@ export default function TagsTable({ data }: { data: string[] }) {
     const values = tags.map((tag, index) => {
       return [
         tag,
-        <ActionControls
+        <TableActionControls
           key={"ac-" + index}
           itemId={tag}
           editLinkUrl="/admin/tags"

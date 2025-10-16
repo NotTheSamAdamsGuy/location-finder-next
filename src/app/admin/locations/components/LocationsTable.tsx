@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import { ClientTable } from "@/app/components/tables/ClientTable";
 import { TableData, Location } from "@/app/lib/definitions";
-import { deleteLocation } from "@/app/actions/locations";
-import ActionControls from "./ActionControls";
+import { deleteLocation } from "@/app/admin/locations/formActions";
+import TableActionControls from "@/app/admin/components/TableActionControls";
 
 export default function LocationsTable({ data }: { data: Location[] }) {
   const [locs, setLocs] = useState<Location[]>(data);
@@ -28,7 +28,7 @@ export default function LocationsTable({ data }: { data: Location[] }) {
     const values = locs.map((loc, index) => {
       return [
         loc.name,
-        <ActionControls
+        <TableActionControls
           key={"ac-" + index}
           itemId={loc.id}
           itemName={loc.name}

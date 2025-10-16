@@ -1,6 +1,6 @@
 import { forbidden, notFound } from "next/navigation";
 
-import TagForm from "@/app/admin/components/TagForm";
+import TagForm from "@/app/admin/tags/components/TagForm";
 import PageHeader from "@/app/admin/components/PageHeader";
 import { verifySession } from "@/app/lib/session";
 import { getTag } from "@/app/data/tags";

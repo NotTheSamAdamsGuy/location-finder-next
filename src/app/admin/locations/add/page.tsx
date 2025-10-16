@@ -1,6 +1,6 @@
 import { forbidden } from "next/navigation";
 
-import LocationForm from "@/app/admin/components/LocationForm";
+import LocationForm from "@/app/admin/locations/components/LocationForm";
 import PageHeader from "@/app/admin/components/PageHeader";
 import { verifySession } from "@/app/lib/session";
 import Breadcrumbs from "@/app/components/Breadcrumbs";

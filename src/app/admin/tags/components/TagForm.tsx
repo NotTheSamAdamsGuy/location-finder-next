@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 
-import { addTag, updateTag } from "@/app/actions/tags";
+import { addTag, updateTag } from "@/app/admin/tags/formActions";
 
 export default function TagForm({ tag = "", type }: { tag?: string, type: string }) {
   const formAction = type === "update" ? updateTag : addTag;
