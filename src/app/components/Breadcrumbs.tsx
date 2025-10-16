@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,15 +12,16 @@ export type BreadcrumbData = {
 
 export default function Breadcrumbs({
   type,
-  className="text-sm bg-base-300 px-3 border-0 border-base-300 border-b border-t"
+  className = "text-sm bg-base-300 px-3 border-0 border-base-300 border-b border-t",
 }: {
-  type: "admin" | "site",
-  className?: string
+  type: "admin" | "site";
+  className?: string;
 }) {
   const pathname = usePathname();
   const breadcrumbsPaths = pathname?.split("/");
   const breadcrumbItems: React.ReactNode[] = [];
-  const mappingFunction = type === "admin" ? adminBreadcrumbMapper : siteBreadcrumbMapper
+  const mappingFunction =
+    type === "admin" ? adminBreadcrumbMapper : siteBreadcrumbMapper;
 
   breadcrumbsPaths?.forEach((path, index) => {
     const { text, link } = mappingFunction(path);
@@ -65,16 +66,21 @@ const adminBreadcrumbMapper = (path: string): BreadcrumbData => {
         text: "Add a Location",
         link: "/admin/locations/add",
       };
-    case "tags": 
+    case "tags":
       return {
         text: "Tags",
-        link: "/admin/tags"
-      }
+        link: "/admin/tags",
+      };
+    case "users": 
+      return {
+        text: "Users",
+        link: "/admin/users"
+      };
     default:
       return {
         text: path,
-        link: `/admin/${path}`
-      }
+        link: `/admin/${path}`,
+      };
   }
 };
 
