@@ -48,6 +48,22 @@ export type FileCard = {
   description: string | null;
 };
 
+export type LocationFeature = {
+  id: string;
+  name: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zip: string;
+  images?: string[];
+  description?: string;
+  tags?: string[];
+  coordinates: {
+    longitude: number;
+    latitude: number;
+  }
+}
+
 export const ImageFileTypes = ["png", "jpg", "jpeg", "webp"];
 
 export const USStates = [
