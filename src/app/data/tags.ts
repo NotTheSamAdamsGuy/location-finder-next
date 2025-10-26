@@ -15,7 +15,7 @@ export const getAllTags = async (): Promise<string[]> => {
 
   try {
     const response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/tags`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/tags`,
       requestOptions
     );
 
@@ -44,7 +44,7 @@ export const getTag = async (tagToFind: string) => {
 
   try {
     const response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/tags/${tagToFind}`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/tags/${tagToFind}`,
       requestOptions
     );
 

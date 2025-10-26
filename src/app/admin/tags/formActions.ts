@@ -67,7 +67,7 @@ export const addTag = async (
 
   try {
     const response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/tags`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/tags`,
       requestOptions
     );
 
@@ -133,7 +133,7 @@ export const updateTag = async (
 
   try {
     const response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/tags`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/tags`,
       requestOptions
     );
 
@@ -170,7 +170,7 @@ export const deleteTag = async (tag: string) => {
   };
 
   const response = await fetch(
-    `${process.env.SITE_HOST}:${process.env.SITE_PORT}/tags/${tag}`,
+    `${process.env.API_HOST}:${process.env.API_PORT}/tags/${tag}`,
     requestOptions
   );
 

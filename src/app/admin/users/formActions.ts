@@ -121,7 +121,7 @@ export const addUser = async (
 
   try {
     const response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/users`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/users`,
       requestOptions
     );
 
@@ -200,7 +200,7 @@ export const updateUser = async (
 
   try {
     const response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/users`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/users`,
       requestOptions
     );
 
@@ -235,7 +235,7 @@ export const deleteUser = async (username: string) => {
 
   try {
     response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/users/${username}`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/users/${username}`,
       requestOptions
     );
 

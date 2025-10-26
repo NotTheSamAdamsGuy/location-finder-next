@@ -15,7 +15,7 @@ export const getAllUsernames = async (): Promise<string[]> => {
 
   try {
     const response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/users/usernames`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/users/usernames`,
       requestOptions
     );
 
@@ -44,7 +44,7 @@ export const getUserProfile = async (username: string) => {
 
   try {
     const response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/users/${username}/profile`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/users/${username}/profile`,
       requestOptions
     );
 
