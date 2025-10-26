@@ -11,10 +11,20 @@ export default function LocationsPage() {
   const searchParams = useSearchParams();
   const latitude = parseFloat(searchParams.get("lat") as string);
   const longitude = parseFloat(searchParams.get("lon") as string);
+  const searchLocation: LocationFeature = {
+    name: "current location", coordinates: { longitude: longitude, latitude: latitude },
+    id: "",
+    streetAddress: "",
+    city: "",
+    state: "",
+    zip: "",
+    type: "currentLocation"
+  };
 
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   const locations: LocationFeature[] = [];
+  locations.push(searchLocation);
   locations.push(
     {
       id: "GpT_YtsUqtQi20x2ssTPI",
@@ -28,6 +38,7 @@ export default function LocationsPage() {
         longitude: -122.342682,
         latitude: 47.627663,
       },
+      type: "location"
     },
     {
       id: "46FKHr21GlHN4D9WBpkwy",
@@ -41,6 +52,7 @@ export default function LocationsPage() {
         longitude: -122.34209,
         latitude: 47.627029,
       },
+      type: "location"
     }
   );
 

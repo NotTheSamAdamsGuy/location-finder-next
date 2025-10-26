@@ -1,29 +1,17 @@
-// components/location-popup.tsx
+import Image from "next/image";
 
 import { LocationFeature } from "@/app/lib/definitions";
-// import { cn } from "@/lib/utils";
-// import {
-//   LocateIcon,
-//   MapPin,
-//   Navigation,
-//   Star,
-//   ExternalLink,
-// } from "lucide-react";
-
-// import { Button } from "./ui/button";
 import Popup from "@/app/components/map/mapbox/Popup";
-// import { Badge } from "./ui/badge";
-// import { Separator } from "./ui/separator";
 
 import placeholder from "@/../public/placeholder.jpg";
-import Image from "next/image";
+
 
 type LocationPopupProps = {
   location: LocationFeature;
   onClose?: () => void;
 };
 export function LocationPopup({ location, onClose }: LocationPopupProps) {
-  if (!location) return null;
+  if (!location || location.type !== "location") return null;
 
   const { name, coordinates } = location;
   const placeholderImage = placeholder;

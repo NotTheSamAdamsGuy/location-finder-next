@@ -46,7 +46,7 @@ const authenticateUser = async (
 
   try {
     const response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/authentication/login`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/authentication/login`,
       requestOptions
     );
     const data = await response.json();

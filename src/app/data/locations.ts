@@ -15,7 +15,7 @@ export const getAllLocations = async (): Promise<Location[]> => {
 
   try {
     const response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/locations`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/locations`,
       requestOptions
     );
 
@@ -44,7 +44,7 @@ export const getLocation = async (id: string) => {
 
   try {
     const response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/locations/${id}`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/locations/${id}`,
       requestOptions
     );
 

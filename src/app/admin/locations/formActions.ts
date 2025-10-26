@@ -154,7 +154,7 @@ export const addLocation = async (
 
   try {
     response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/locations`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/locations`,
       requestOptions
     );
 
@@ -184,7 +184,6 @@ export const updateLocation = async (
   formState: AddLocationFormState,
   formData: FormData
 ) => {
-  console.log(formData);
   // validate form fields
   const validatedFields = UpdateLocationFormSchema.safeParse({
     id: formData.get("id"),
@@ -284,7 +283,7 @@ export const updateLocation = async (
 
   try {
     response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/locations`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/locations`,
       requestOptions
     );
 
@@ -320,7 +319,7 @@ export const deleteLocation = async (locationId: string) => {
 
   try {
     response = await fetch(
-      `${process.env.SITE_HOST}:${process.env.SITE_PORT}/locations/${locationId}`,
+      `${process.env.API_HOST}:${process.env.API_PORT}/locations/${locationId}`,
       requestOptions
     );
 
