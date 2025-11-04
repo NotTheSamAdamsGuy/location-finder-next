@@ -65,6 +65,23 @@ export type LocationFeature = {
   type: string;
 };
 
+export type MapLocation = {
+  id: string;
+  name: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zip: string;
+  images?: string[];
+  description?: string;
+  tags?: string[];
+  coordinates: {
+    longitude: number;
+    latitude: number;
+  },
+  type: string;
+};
+
 type MapboxContextBase = {
   id: string;
   name: string;
@@ -132,6 +149,22 @@ export type MapboxFeature = {
     },
   };
 };
+
+export type MapListState = {
+  zoom: number;
+  featureCollection: GeoJSON.FeatureCollection;
+  coordinates: Coordinates;
+  selectedFeature: GeoJSON.Feature | null;
+  displayPopup: boolean;
+  mapLoaded: boolean;
+};
+
+export type MapListAction =
+  | { type: "ZOOM"; payload: number }
+  | { type: "LOAD_FEATURES"; payload: GeoJSON.FeatureCollection }
+  | { type: "REPOSITION_MAP"; payload: Coordinates }
+  | { type: "SELECT_FEATURE"; payload: GeoJSON.Feature | null }
+  | { type: "MAP_LOADED"; payload: boolean };
 
 export const ImageFileTypes = ["png", "jpg", "jpeg", "webp"];
 
