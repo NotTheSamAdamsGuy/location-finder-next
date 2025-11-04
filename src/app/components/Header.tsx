@@ -38,6 +38,7 @@ export default async function Header() {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               <AdminLink role={user.role} />
+              <li><Link href="locations?lat=47.627663&lon=-122.342682">Locations Page</Link></li>
               <li>
                 <LogoutLink user={user} />
               </li>
