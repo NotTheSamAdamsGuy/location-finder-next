@@ -1,9 +1,9 @@
 import { forbidden } from "next/navigation";
 
-import PageHeader from "@/app/admin/components/PageHeader";
-import { verifySession } from "@/app/lib/session";
+import { verifySession } from "@/lib/session";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
-import AddUserForm from "@/app/admin/users/components/AddUserForm";
+import PageHeader from "@/components/features/admin/PageHeader";
+import AddUserForm from "@/components/features/admin/users/AddUserForm";
 
 export default async function AddUserAdminPage() {
   const session = await verifySession();

@@ -2,9 +2,9 @@
 
 import { useActionState } from "react";
 
-import { updateUser } from "@/app/admin/users/formActions";
-import Select from "@/app/components/form/Select";
-import { User } from "@/app/lib/definitions";
+import { updateUser } from "@/formActions/admin/formActions";
+import Select from "@/components/ui/Select";
+import { User } from "@/types/user.types";
 
 type UserFormProps = {
   user: User;

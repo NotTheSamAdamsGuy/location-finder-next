@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 
-import { verifySession } from "@/app/lib/session";
-import { getAllTags } from "@/app/data/tags";
-import Breadcrumbs from "@/app/components/Breadcrumbs";
-import TagsTable from "@/app/admin/tags/components/TagsTable";
+import { verifySession } from "@/lib/session";
+import { getAllTags } from "@/lib/api/tags";
+import Breadcrumbs from "@/components/features/admin/Breadcrumbs";
+import TagsTable from "@/components/features/admin/tags/TagsTable";
 
 export default async function TagsAdminPage() {
   const session = await verifySession();
