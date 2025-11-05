@@ -1,7 +1,7 @@
 import { forbidden } from "next/navigation";
 
 import { verifySession } from "@/lib/session";
-import Breadcrumbs from "@/app/components/Breadcrumbs";
+import Breadcrumbs from "@/components/features/admin/Breadcrumbs";
 import PageHeader from "@/components/features/admin/PageHeader";
 import AddUserForm from "@/components/features/admin/users/AddUserForm";
 

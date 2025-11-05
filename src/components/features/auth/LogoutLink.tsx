@@ -1,7 +1,7 @@
 "use client";
 
-import { logout } from "../actions/auth";
-import { User } from "../lib/definitions";
+import { logout } from "@/formActions/auth";
+import { User } from "@/types/user.types";
 
 export default function LogoutLink({
   user,

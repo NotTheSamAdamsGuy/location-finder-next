@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import { login } from "@/app/actions/auth";
+
+import { login } from "@/formActions/auth";
 
 export default function LoginForm() {
   const [state, action, pending] = useActionState(login, undefined);

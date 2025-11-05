@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { TableData } from "@/types/tables.types";
-import { deleteUser } from "@/formActions/admin/formActions";
+import { deleteUser } from "@/formActions/admin/users";
 import ActionControls from "@/components/features/admin/TableActionControls";
 import { ClientTable } from "@/components/ui/ClientTable";
 

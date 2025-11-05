@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 
-import { addUser } from "@/formActions/admin/formActions";
+import { addUser } from "@/formActions/admin/users";
 import Select from "@/components/ui/Select";
 
 export default function AddUserForm() {

@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 
-import { updateUser } from "@/formActions/admin/formActions";
+import { updateUser } from "@/formActions/admin/users";
 import Select from "@/components/ui/Select";
 import { User } from "@/types/user.types";
 
