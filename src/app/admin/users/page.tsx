@@ -1,10 +1,11 @@
 import Link from "next/link";
-
-import Breadcrumbs from "@/app/components/Breadcrumbs";
-import UsersTable from "@/app/admin/users/components/UsersTable";
-import { getAllUsernames } from "@/app/data/users";
-import { verifySession } from "@/app/lib/session";
 import { forbidden } from "next/navigation";
+
+import { getAllUsernames } from "@/lib/api/users";
+import { verifySession } from "@/lib/session";
+import Breadcrumbs from "@/components/features/admin/Breadcrumbs";
+import UsersTable from "@/components/features/admin/users/UsersTable";
+
 
 export default async function UsersAdminPage() {
   const session = await verifySession();

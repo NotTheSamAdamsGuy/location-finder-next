@@ -1,5 +1,5 @@
 import Image from "next/image";
-import LocationSearchForm from "./components/LocationSearchForm";
+import LocationSearchForm from "@/components/features/search/LocationSearchForm";
 
 export default function Home() {
   return (

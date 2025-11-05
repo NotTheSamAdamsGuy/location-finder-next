@@ -1,7 +1,8 @@
 "use server";
 import { NextRequest, NextResponse } from "next/server";
-import { decrypt } from "@/app/lib/session";
 import { cookies } from "next/headers";
+
+import { decrypt } from "@/lib/session";
 
 const protectedRoutes = ["/", "/admin", "/admin/locations", "/admin/locations/add"];
 const publicRoutes = ["/login"];

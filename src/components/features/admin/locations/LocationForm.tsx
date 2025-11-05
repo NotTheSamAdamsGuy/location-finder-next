@@ -2,12 +2,12 @@
 
 import { useActionState } from "react";
 
-import { addLocation, updateLocation} from "@/app/admin/locations/formActions";
-import { USStates } from "@/app/lib/definitions";
-import Select from "@/app/components/form/Select";
-import Multiselect from "@/app/components/form/Multiselect";
-import FileUploader, { FileUploaderItem } from "@/app/admin/components/FileUploader";
-import { Location } from "@/app/lib/definitions";
+import { addLocation, updateLocation} from "@/formActions/admin/locations";
+import { USStates } from "@/lib/constants";
+import { Location } from "@/types/locations.types";
+import FileUploader, { FileUploaderItem } from "@/components/features/admin/FileUploader";
+import Multiselect from "@/components/ui/Multiselect";
+import Select from "@/components/ui/Select";
 
 type LocationFormProps = {
   tags?: string[];

@@ -1,10 +1,10 @@
 import { forbidden } from "next/navigation";
 
-import PageHeader from "@/app/admin/components/PageHeader";
-import { verifySession } from "@/app/lib/session";
-import Breadcrumbs from "@/app/components/Breadcrumbs";
-import { getUserProfile } from "@/app/data/users";
-import UpdateUserForm from "@/app/admin/users/components/UpdateUserForm";
+import { getUserProfile } from "@/lib/api/users";
+import { verifySession } from "@/lib/session";
+import Breadcrumbs from "@/components/features/admin/Breadcrumbs";
+import PageHeader from "@/components/features/admin/PageHeader";
+import UpdateUserForm from "@/components/features/admin/users/UpdateUserForm";
 
 export default async function UpdateUserAdminPage({
   params,

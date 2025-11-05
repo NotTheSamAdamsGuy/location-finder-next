@@ -2,11 +2,16 @@
 
 import { useActionState } from "react";
 
-import { addUser } from "@/app/admin/users/formActions";
-import Select from "@/app/components/form/Select";
+import { updateUser } from "@/formActions/admin/users";
+import Select from "@/components/ui/Select";
+import { User } from "@/types/user.types";
 
-export default function AddUserForm() {
-  const formAction = addUser;
+type UserFormProps = {
+  user: User;
+};
+
+export default function UpdateUserForm({ user }: UserFormProps) {
+  const formAction = updateUser;
   const [formState, action, pending] = useActionState(formAction, undefined);
 
   const roleOptions = [{name: "user", value: "User"}, {name: "admin", value: "Admin"}].map((role) => {
@@ -14,11 +19,12 @@ export default function AddUserForm() {
     });
 
   // prioritize formState values over values passed in as user props; fallback to blank/empty/false values.
-  const username = formState?.fields.username?.toString() || "";
-  const password = formState?.fields.password?.toString() || "";
-  const firstName = formState?.fields.firstName?.toString() || "";
-  const lastName = formState?.fields.lastName?.toString() || "";
-  const role = formState?.fields.role?.toString() || "";
+  const username = user?.username || "";
+  const password = formState?.fields.password?.toString() || user?.password || "";
+  const newPassword = formState?.fields.newPassword?.toString() || "";
+  const firstName = formState?.fields.firstName?.toString() || user?.firstName || "";
+  const lastName = formState?.fields.lastName?.toString() || user?.lastName || "";
+  const role = formState?.fields.role?.toString() || user?.role || "";
 
   return (
     <form action={action} className="flex flex-col w-full">
@@ -30,12 +36,11 @@ export default function AddUserForm() {
           id="username"
           name="username"
           type="text"
-          className="input input-lg flex w-full"
+          className="flex w-full"
           autoComplete="off"
           defaultValue={username}
-          required={true}
+          readOnly={true}
         />
-        <p className="text-error text-sm h-1.5">{formState?.errors.username}</p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -52,6 +57,23 @@ export default function AddUserForm() {
         />
         <p className="text-error text-sm h-1.5">
           {formState?.errors.password}
+        </p>
+      </div>
+
+      <div className="flex flex-col mt-4">
+        <label htmlFor="newPassword" className="label flex">
+          New Password
+        </label>
+        <input
+          id="newPassword"
+          name="newPassword"
+          type="newPassword"
+          className="input input-lg flex w-full"
+          autoComplete="off"
+          defaultValue={newPassword}
+        />
+        <p className="text-error text-sm h-1.5">
+          {formState?.errors.newPassword}
         </p>
       </div>
 

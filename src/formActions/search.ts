@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { MapboxSuggestion } from "../lib/definitions";
 import { redirect } from "next/navigation";
+
+import { MapboxSuggestion } from "@/types/mapbox.types";
 
 type LocationSearchFormState =
   | {

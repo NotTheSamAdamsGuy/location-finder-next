@@ -3,12 +3,12 @@
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
 
-import AutocompleteTextbox from "./form/AutocompleteTextbox";
-import { MapboxSuggestion } from "../lib/definitions";
+import AutocompleteTextbox from "@/components/ui/AutocompleteTextbox";
+import { MapboxSuggestion } from "@/types/mapbox.types";
 import {
   getLocationSuggestions,
   getMapLocationCoordinates,
-} from "../actions/search";
+} from "@/formActions/search";
 
 type ListItemData = {
   name: string;

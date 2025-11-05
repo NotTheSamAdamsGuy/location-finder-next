@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 
-import { getUser } from "../lib/session";
-import LogoutLink from "./LogoutLink";
-import { User } from "../lib/definitions";
+import { getUser } from "@/lib/session";
+import LogoutLink from "@/components/features/auth/LogoutLink";
+import { User } from "@/types/user.types";
 
 export default async function Header() {
   const siteName = process.env.SITE_NAME;

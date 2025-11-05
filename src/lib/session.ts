@@ -4,7 +4,8 @@ import { cache } from "react";
 import { redirect } from "next/navigation";
 import { JWTPayload, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { User } from "./definitions";
+
+import { User } from "@/types/user.types";
 
 const secretKey = process.env.JWT_SECRET_KEY;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -40,7 +41,11 @@ export async function getUser(token: string) {
   const session: JWTPayload = await decrypt(token);
   const user: User = {
     username: "",
-    role: ""
+    role: "",
+    firstName: "",
+    lastName: "",
+    password: "",
+    lastLoginTimestamp: 0
   }
 
   if (session) {

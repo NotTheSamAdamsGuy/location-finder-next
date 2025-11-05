@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 
-import { ClientTable } from "@/app/components/tables/ClientTable";
-import { TableData, Location } from "@/app/lib/definitions";
-import { deleteLocation } from "@/app/admin/locations/formActions";
-import TableActionControls from "@/app/admin/components/TableActionControls";
+import { Location } from "@/types/locations.types";
+import { TableData } from "@/types/tables.types";
+import { deleteLocation } from "@/formActions/admin/locations";
+import TableActionControls from "@/components/features/admin/TableActionControls";
+import { ClientTable } from "@/components/ui/ClientTable";
 
 export default function LocationsTable({ data }: { data: Location[] }) {
   const [locs, setLocs] = useState<Location[]>(data);

@@ -1,12 +1,12 @@
 import { forbidden, notFound } from "next/navigation";
 
-import LocationForm from "@/app/admin/locations/components/LocationForm";
-import PageHeader from "@/app/admin/components/PageHeader";
-import { verifySession } from "@/app/lib/session";
-import { getLocation } from "@/app/data/locations";
-import Breadcrumbs from "@/app/components/Breadcrumbs";
-import { getAllTags } from "@/app/data/tags";
-import { Location } from "@/app/lib/definitions";
+import LocationForm from "@/components/features/admin/locations/LocationForm";
+import PageHeader from "@/components/features/admin/PageHeader";
+import { verifySession } from "@/lib/session";
+import { getLocation } from "@/lib/api/locations";
+import Breadcrumbs from "@/components/features/admin/Breadcrumbs";
+import { getAllTags } from "@/lib/api/tags";
+import { Location } from "@/types/locations.types";
 
 export default async function UpdateLocationAdminPage({
   params,

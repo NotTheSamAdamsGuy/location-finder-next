@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-import { Location } from "../lib/definitions";
+import { Location } from "@/types/locations.types";
 
 export const getAllLocations = async (): Promise<Location[]> => {
   const token = (await cookies()).get("token")?.value;
