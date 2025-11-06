@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { FeatureCollection } from "geojson";
+import { LocationFeatureCollection } from "@notthesamadamsguy/location-finder-types";
 
 export type GetNearbyFeaturesProps = {
   latitude: number;
@@ -20,7 +20,7 @@ export const getNearbyFeatures = async ({
   mapWidthInPx,
   unitOfDistance,
   sort,
-}: GetNearbyFeaturesProps): Promise<FeatureCollection> => {
+}: GetNearbyFeaturesProps): Promise<LocationFeatureCollection> => {
   const token = (await cookies()).get("token")?.value;
 
   const requestOptions = {

@@ -1,7 +1,7 @@
-import { Feature } from "geojson";
+import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
 
 type FeatureCardProps = {
-  feature: Feature;
+  feature: LocationFeature;
   onClick: (evt: React.MouseEvent<HTMLDivElement>) => void;
 };
 

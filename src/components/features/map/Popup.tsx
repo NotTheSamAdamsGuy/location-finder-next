@@ -1,11 +1,12 @@
 import { Feature, Point } from "geojson";
+import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
 type PopupProps = {
   map: mapboxgl.Map;
-  activeFeature: Feature | null;
+  activeFeature: LocationFeature | null;
 };
 
 export default function Popup({ map, activeFeature }: PopupProps) {

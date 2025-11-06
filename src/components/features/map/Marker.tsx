@@ -1,11 +1,11 @@
-import { Feature } from "geojson";
+import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
 type MarkerProps = {
   map: mapboxgl.Map;
-  feature: Feature;
+  feature: LocationFeature;
   isActive: boolean;
   onClick: (evt: React.MouseEvent<HTMLDivElement>) => void;
 };
@@ -15,7 +15,7 @@ export default function Marker({
   isActive,
   onClick,
 }: MarkerProps) {
-  const { geometry, properties } = feature;
+  const { geometry, id } = feature;
   const markerRef = useRef<mapboxgl.Marker | null>(null);
   const contentRef = useRef(document.createElement("div"));
 
@@ -41,7 +41,7 @@ export default function Marker({
         <div
           onClick={handleMarkerClick}
           className="h-[41px] w-[27px] cursor-pointer"
-          data-id={properties!.id}
+          data-id={id}
         >
           <MarkerPin fillColor={isActive ? "red" : undefined} />
         </div>,

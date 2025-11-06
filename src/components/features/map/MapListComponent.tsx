@@ -150,7 +150,7 @@ export default function MapListComponent() {
 
   const featureCards = state.featureCollection.features.map((feature) => (
     <FeatureCard
-      key={`card-${feature.properties?.id}`}
+      key={`card-${feature.id}`}
       feature={feature}
       onClick={handleFeatureCardClick}
     />
@@ -160,7 +160,7 @@ export default function MapListComponent() {
     const id = evt.currentTarget.dataset["id"];
     const payload =
       state.featureCollection.features!.find(
-        (feature) => feature.properties!.id === id
+        (feature) => feature.id === id
       ) || null;
     dispatch({ type: "SELECT_FEATURE", payload: payload });
   };
@@ -177,7 +177,7 @@ export default function MapListComponent() {
           state.featureCollection.features?.map((feature) => {
             return (
               <Marker
-                key={`marker-${feature.properties?.id}`}
+                key={`marker-${feature.id}`}
                 map={mapRef.current!}
                 feature={feature}
                 isActive={state.selectedFeature === feature}
