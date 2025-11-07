@@ -9,10 +9,10 @@ type AddLocationFormState =
       errors?: {
         name?: string[];
         description?: string[];
-        streetAddress?: string[];
+        address?: string[];
         city?: string[];
-        state?: string[];
-        zip?: string[];
+        stateAbbreviation?: string[];
+        postalCode?: string[];
       };
       message?: string;
     }
@@ -21,30 +21,32 @@ type AddLocationFormState =
 const AddLocationFormSchema = z.object({
   name: z.string().trim().min(1, "Name is required"),
   description: z.string().trim(),
-  streetAddress: z.string().trim().min(1, "Street address is required"),
+  address: z.string().trim().min(1, "Street address is required"),
   city: z.string().trim().min(1, "City is required"),
-  state: z.string("State is required").trim(),
-  zip: z.string().trim().min(1, "ZIP code is required"),
+  stateAbbreviation: z.string("State is required").trim(),
+  postalCode: z.string().trim().min(1, "ZIP code is required"),
+  countryCode: z.string().trim().nonempty("Country code is required"),
   tags: z.array(z.string()),
   filenames: z.array(z.string()),
   originalFilenames: z.array(z.string()),
   imageDescriptions: z.array(z.string()),
-  displayOnSite: z.union([z.string(), z.null()])
+  displayOnSite: z.union([z.string(), z.null()]),
 });
 
 const UpdateLocationFormSchema = z.object({
   id: z.string(),
   name: z.string().trim().min(1, "Name is required"),
   description: z.string().trim(),
-  streetAddress: z.string().trim().min(1, "Street address is required"),
+  address: z.string().trim().min(1, "Street address is required"),
   city: z.string().trim().min(1, "City is required"),
-  state: z.string("State is required").trim(),
-  zip: z.string().trim().min(1, "ZIP code is required"),
+  stateAbbreviation: z.string("State is required").trim(),
+  postalCode: z.string().trim().min(1, "ZIP code is required"),
+  countryCode: z.string().trim().nonempty("Country code is required"),
   tags: z.array(z.string()),
   filenames: z.array(z.string()),
   originalFilenames: z.array(z.string()),
   imageDescriptions: z.array(z.string()),
-  displayOnSite: z.union([z.string(), z.null()])
+  displayOnSite: z.union([z.string(), z.null()]),
 });
 
 /**
@@ -61,15 +63,16 @@ export const addLocation = async (
   const validatedFields = AddLocationFormSchema.safeParse({
     name: formData.get("name"),
     description: formData.get("description"),
-    streetAddress: formData.get("streetAddress"),
+    address: formData.get("address"),
     city: formData.get("city"),
-    state: formData.get("state"),
-    zip: formData.get("zip"),
+    stateAbbreviation: formData.get("stateAbbreviation"),
+    postalCode: formData.get("postalCode"),
+    countryCode: formData.get("countryCode"),
     tags: formData.getAll("tag"),
     filenames: formData.getAll("filename"),
     originalFilenames: formData.getAll("originalFilename"),
     imageDescriptions: formData.getAll("imageDescription"),
-    displayOnSite: formData.get("displayOnSite")
+    displayOnSite: formData.get("displayOnSite"),
   });
 
   // If any form fields are invalid, return early
@@ -80,30 +83,44 @@ export const addLocation = async (
         id: formData.get("id"),
         name: formData.get("name"),
         description: formData.get("description"),
-        streetAddress: formData.get("streetAddress"),
+        address: formData.get("address"),
         city: formData.get("city"),
-        state: formData.get("state"),
-        zip: formData.get("zip"),
+        stateAbbreviation: formData.get("stateAbbreviation"),
+        postalCode: formData.get("postalCode"),
+        countryCode: formData.get("countryCode"),
         tags: formData.getAll("tag"),
         filenames: formData.getAll("filename"),
         originalFilenames: formData.getAll("originalFilename"),
         imageDescriptions: formData.getAll("imageDescription"),
-        displayOnSite: formData.get("displayOnSite")
+        displayOnSite: formData.get("displayOnSite"),
       },
     };
   }
 
-  const { name, description, streetAddress, city, state, zip, tags, filenames, originalFilenames, imageDescriptions, displayOnSite } =
-    validatedFields.data;
+  const {
+    name,
+    description,
+    address,
+    city,
+    stateAbbreviation,
+    postalCode,
+    countryCode,
+    tags,
+    filenames,
+    originalFilenames,
+    imageDescriptions,
+    displayOnSite,
+  } = validatedFields.data;
 
   // attempt to post data to the server
   const postData: FormData = new FormData();
   postData.append("name", name);
   postData.append("description", description);
-  postData.append("streetAddress", streetAddress);
+  postData.append("address", address);
   postData.append("city", city);
-  postData.append("state", state);
-  postData.append("zip", zip);
+  postData.append("stateAbbreviation", stateAbbreviation);
+  postData.append("postalCode", postalCode);
+  postData.append("countryCode", countryCode);
 
   // display on site toggle has values of null or "on" instead of true/false, so we need to fix this
   const correctedDisplayOnSite = displayOnSite === "on" ? true : false;
@@ -189,15 +206,16 @@ export const updateLocation = async (
     id: formData.get("id"),
     name: formData.get("name"),
     description: formData.get("description"),
-    streetAddress: formData.get("streetAddress"),
+    address: formData.get("address"),
     city: formData.get("city"),
-    state: formData.get("state"),
-    zip: formData.get("zip"),
+    stateAbbreviation: formData.get("stateAbbreviation"),
+    postalCode: formData.get("postalCode"),
+    countryCode: formData.get("countryCode"),
     tags: formData.getAll("tag"),
     filenames: formData.getAll("filename"),
     originalFilenames: formData.getAll("originalFilename"),
     imageDescriptions: formData.getAll("imageDescription"),
-    displayOnSite: formData.get("displayOnSite")
+    displayOnSite: formData.get("displayOnSite"),
   });
 
   // If any form fields are invalid, return early
@@ -208,31 +226,46 @@ export const updateLocation = async (
         id: formData.get("id"),
         name: formData.get("name"),
         description: formData.get("description"),
-        streetAddress: formData.get("streetAddress"),
+        address: formData.get("address"),
         city: formData.get("city"),
-        state: formData.get("state"),
-        zip: formData.get("zip"),
+        stateAbbreviation: formData.get("stateAbbreviation"),
+        postalCode: formData.get("postalCode"),
+        countryCode: formData.get("countryCode"),
         tags: formData.getAll("tag"),
         filenames: formData.getAll("filename"),
         originalFilenames: formData.getAll("originalFilename"),
         imageDescriptions: formData.getAll("imageDescription"),
-        displayOnSite: formData.get("displayOnSite")
+        displayOnSite: formData.get("displayOnSite"),
       },
     };
   }
 
-  const { id, name, description, streetAddress, city, state, zip, tags, filenames, originalFilenames, imageDescriptions, displayOnSite } =
-    validatedFields.data;
+  const {
+    id,
+    name,
+    description,
+    address,
+    city,
+    stateAbbreviation,
+    postalCode,
+    countryCode,
+    tags,
+    filenames,
+    originalFilenames,
+    imageDescriptions,
+    displayOnSite,
+  } = validatedFields.data;
 
   // attempt to submit data to the server
   const putData: FormData = new FormData();
   putData.append("id", id);
   putData.append("name", name);
   putData.append("description", description);
-  putData.append("streetAddress", streetAddress);
+  putData.append("address", address);
   putData.append("city", city);
-  putData.append("state", state);
-  putData.append("zip", zip);
+  putData.append("stateAbbreviation", stateAbbreviation);
+  putData.append("postalCode", postalCode);
+  putData.append("countryCode", countryCode);
 
   // display on site toggle has values of null or "on" instead of true/false, so we need to fix this
   const correctedDisplayOnSite = displayOnSite === "on" ? true : false;

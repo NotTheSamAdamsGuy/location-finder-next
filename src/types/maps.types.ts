@@ -16,7 +16,7 @@ export type MapListState = {
 
 export type MapListAction =
   | { type: "ZOOM"; payload: number }
-  | { type: "LOAD_FEATURES"; payload: LocationFeatureCollection }
+  | { type: "LOAD_LOCATIONS"; payload: LocationFeatureCollection }
   | { type: "REPOSITION_MAP"; payload: Coordinates }
-  | { type: "SELECT_FEATURE"; payload: LocationFeature | null }
+  | { type: "SELECT_LOCATION"; payload: LocationFeature | null }
   | { type: "MAP_LOADED"; payload: boolean };
