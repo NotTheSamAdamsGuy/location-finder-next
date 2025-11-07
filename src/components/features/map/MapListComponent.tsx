@@ -166,7 +166,7 @@ export default function MapListComponent() {
   };
 
   return (
-    <div className="flex w-full h-[calc(100vh_-_64px)]">
+    <div className="flex w-full h-[calc(100vh-64px)]">
       <div className="flex w-full sm:w-1/2 h-full">
         <div
           id="map-container"

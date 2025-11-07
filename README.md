@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Location Finder
+
+A modern web application built with Next.js for finding and managing locations with interactive maps powered by Mapbox.
+
+## Features
+
+- 🗺️ Interactive map interface using Mapbox GL
+- 🔍 Advanced location search functionality
+- 🎨 Beautiful UI with DaisyUI and Tailwind CSS
+- 🌙 Dark mode support
+- 🔐 Secure authentication
+- ⚡ Built with Next.js 15 and React 19
+- 📱 Fully responsive design
+
+## Prerequisites
+
+- Node.js (LTS version recommended)
+- npm or yarn
+- Mapbox API key
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository:
+```bash
+git clone https://github.com/NotTheSamAdamsGuy/location-finder-next.git
+cd location-finder-next
+```
 
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up environment variables:
+Create a `.env.local` file in the root directory with your Mapbox access token and other required environment variables.
+
+4. Run the development server:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` - Start the development server with Turbopack
+- `npm run build` - Build the application for production
+- `npm run start` - Start the production server
+- `npm run lint` - Run ESLint
+- `npm run test` - Run tests with Vitest
+- `npm run coverage` - Generate test coverage report
 
-## Learn More
+## Technology Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Framework:** Next.js 15.5.0
+- **UI Library:** React 19.1.0
+- **Styling:** 
+  - Tailwind CSS
+  - DaisyUI
+  - FontAwesome icons
+- **Maps:** Mapbox GL
+- **Testing:** Vitest
+- **Form Validation:** Zod
+- **Authentication:** Jose (JWT handling)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/              # App router pages and layouts
+├── components/       # React components
+│   ├── features/    # Feature-specific components
+│   ├── layout/      # Layout components
+│   └── ui/          # Reusable UI components
+├── formActions/     # Server actions for forms
+├── lib/            # Utility functions and constants
+└── types/          # TypeScript type definitions
+```
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+This project is private and proprietary. All rights reserved.
+
+## Support
+
+For support, please open an issue in the GitHub repository.
