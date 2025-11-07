@@ -6,7 +6,6 @@ import { verifySession } from "@/lib/session";
 import { getLocation } from "@/lib/api/locations";
 import Breadcrumbs from "@/components/features/admin/Breadcrumbs";
 import { getAllTags } from "@/lib/api/tags";
-import { Location } from "@/types/locations.types";
 
 export default async function UpdateLocationAdminPage({
   params,
@@ -22,36 +21,11 @@ export default async function UpdateLocationAdminPage({
   }
 
   // check if the location exists in the database; return a 404 if it does not
-  const {
-    name,
-    streetAddress,
-    city,
-    state,
-    zip,
-    coordinates,
-    description,
-    images,
-    tags,
-    displayOnSite,
-  } = { ...(await getLocation(id)) };
+  const location = await getLocation(id);
 
-  if (!name) {
+  if (!location) {
     notFound();
   }
-
-  const location: Location = {
-    id: id,
-    name: name,
-    streetAddress: streetAddress,
-    city: city,
-    state: state,
-    zip: zip,
-    coordinates: coordinates,
-    description: description,
-    images: images,
-    tags: tags,
-    displayOnSite: displayOnSite,
-  };
 
   return (
     <div>

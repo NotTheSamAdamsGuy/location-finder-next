@@ -7,7 +7,7 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import { MapListAction, MapListState } from "@/types/maps.types";
-import { getNearbyFeatures } from "@/lib/api/features";
+import { getNearbyLocations } from "@/lib/api/locations";
 import FeatureCard from "./FeatureCard";
 import Marker from "./Marker";
 import Popup from "./Popup";
@@ -21,7 +21,7 @@ export default function MapListComponent() {
           ...state,
           zoom: (state.zoom = action.payload),
         };
-      case "LOAD_FEATURES":
+      case "LOAD_LOCATIONS":
         return {
           ...state,
           featureCollection: action.payload,
@@ -31,7 +31,7 @@ export default function MapListComponent() {
           ...state,
           coordinates: action.payload,
         };
-      case "SELECT_FEATURE":
+      case "SELECT_LOCATION":
         return {
           ...state,
           selectedFeature: action.payload,
@@ -66,12 +66,12 @@ export default function MapListComponent() {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   const handleFeatureCardClick = (evt: React.MouseEvent<HTMLDivElement>) => {
-    const selectedFeature =
+    const selectedLocation =
       state.featureCollection.features.find(
         (feature) => feature.id === evt.currentTarget.dataset["id"]
       ) || null;
 
-    dispatch({ type: "SELECT_FEATURE", payload: selectedFeature });
+    dispatch({ type: "SELECT_LOCATION", payload: selectedLocation });
   };
 
   // Load map data
@@ -132,8 +132,8 @@ export default function MapListComponent() {
     const mapHeightInPx = mapRect.height;
 
     // get location data
-    async function fetchFeaturesData() {
-      const getFeaturesParams = {
+    async function fetchLocationsData() {
+      const getLocationsParams = {
         latitude: state.coordinates.latitude,
         longitude: state.coordinates.longitude,
         zoomlevel: state.zoom,
@@ -142,13 +142,13 @@ export default function MapListComponent() {
         unitOfDistance: unitOfDistance,
         sort: sort,
       };
-      const features = await getNearbyFeatures(getFeaturesParams);
-      dispatch({ type: "LOAD_FEATURES", payload: features });
+      const locations = await getNearbyLocations(getLocationsParams);
+      dispatch({ type: "LOAD_LOCATIONS", payload: locations });
     }
-    fetchFeaturesData();
+    fetchLocationsData();
   }, [state.coordinates.latitude, state.coordinates.longitude, state.zoom]);
 
-  const featureCards = state.featureCollection.features.map((feature) => (
+  const locationCards = state.featureCollection.features.map((feature) => (
     <FeatureCard
       key={`card-${feature.id}`}
       feature={feature}
@@ -162,7 +162,7 @@ export default function MapListComponent() {
       state.featureCollection.features!.find(
         (feature) => feature.id === id
       ) || null;
-    dispatch({ type: "SELECT_FEATURE", payload: payload });
+    dispatch({ type: "SELECT_LOCATION", payload: payload });
   };
 
   return (
@@ -189,7 +189,7 @@ export default function MapListComponent() {
           <Popup map={mapRef.current} activeFeature={state.selectedFeature} />
         )}
       </div>
-      <div className="flex flex-col w-full sm:w-1/2 h-full">{featureCards}</div>
+      <div className="flex flex-col w-full sm:w-1/2 h-full">{locationCards}</div>
     </div>
   );
 }

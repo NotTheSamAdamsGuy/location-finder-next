@@ -1,21 +1,27 @@
 "use client";
 
 import { useActionState } from "react";
+import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
 
-import { addLocation, updateLocation} from "@/formActions/admin/locations";
-import { USStates } from "@/lib/constants";
-import { Location } from "@/types/locations.types";
-import FileUploader, { FileUploaderItem } from "@/components/features/admin/FileUploader";
+import { addLocation, updateLocation } from "@/formActions/admin/locations";
+import { US_STATES } from "@/lib/constants";
+import FileUploader, {
+  FileUploaderItem,
+} from "@/components/features/admin/FileUploader";
 import Multiselect from "@/components/ui/Multiselect";
 import Select from "@/components/ui/Select";
 
 type LocationFormProps = {
   tags?: string[];
-  location?: Location;
+  location?: LocationFeature;
   type: string;
 };
 
-export default function LocationForm({ tags, location, type }: LocationFormProps) {
+export default function LocationForm({
+  tags,
+  location,
+  type,
+}: LocationFormProps) {
   const formAction = type === "update" ? updateLocation : addLocation;
   const [formState, action, pending] = useActionState(formAction, undefined);
 
@@ -24,34 +30,48 @@ export default function LocationForm({ tags, location, type }: LocationFormProps
       return { optionText: tag, value: tag };
     }) || [];
 
-  const stateOptions = USStates.map((state) => {
+  const stateOptions = US_STATES.map((state) => {
     return { key: state.abbreviation, value: state.abbreviation };
   });
 
   // prioritize formState values over values passed in as location props; fallback to blank/empty/false values.
   const id = formState?.fields.id?.toString() || location?.id || "";
-  const name = formState?.fields.name?.toString() || location?.name || "";
+  const name =
+    formState?.fields.name?.toString() || location?.properties.name || "";
   const description =
-    formState?.fields.description?.toString() || location?.description || "";
-  const city = formState?.fields.city?.toString() || location?.city || "";
-  const state = formState?.fields.state?.toString() || location?.state || "";
-  const zip = formState?.fields.zip?.toString() || location?.zip || "";
-  const streetAddress =
-    formState?.fields.streetAddress?.toString() ||
-    location?.streetAddress ||
+    formState?.fields.description?.toString() ||
+    location?.properties.description ||
     "";
+  const city =
+    formState?.fields.city?.toString() || location?.properties.city || "";
+  const stateAbbreviation =
+    formState?.fields.stateAbbreviation?.toString() ||
+    location?.properties.state.abbreviation ||
+    "";
+  const postalCode =
+    formState?.fields.postalCode?.toString() ||
+    location?.properties.postalCode ||
+    "";
+  const address =
+    formState?.fields.address?.toString() || location?.properties.address || "";
+  // Uncomment once we have a country code input that isn't hidden
+  // const countryCode =
+  //   formState?.fields.countryCode?.toString() ||
+  //   location?.properties.country.countryCode ||
+  //   "";
   const selectedTags =
-    formState?.fields.tags.map((tag) => tag.toString()) || location?.tags || [];
-    
+    formState?.fields.tags.map((tag) => tag.toString()) || location?.properties.tags || [];
+
   const displayOnSite =
     formState?.fields.displayOnSite === "on"
       ? true
-      : false || location?.displayOnSite || false;
+      : false || location?.properties.displayOnSite || false;
 
   let fileUploaderItems: FileUploaderItem[] = [];
 
   if (location) {
-    fileUploaderItems = location?.images.map((image) => {
+    const images = location?.properties.images || [];
+    fileUploaderItems = images.map((image) => {
       return {
         fileName: image.filename,
         displayName: image.originalFilename,
@@ -97,20 +117,20 @@ export default function LocationForm({ tags, location, type }: LocationFormProps
       </div>
 
       <div className="flex flex-col mt-4">
-        <label htmlFor="streetAddress" className="label flex">
-          Street Address
+        <label htmlFor="address" className="label flex">
+          Address
         </label>
         <input
-          id="streetAddress"
-          name="streetAddress"
+          id="address"
+          name="address"
           type="text"
           className="input input-lg flex w-full"
           autoComplete="off"
-          defaultValue={streetAddress}
+          defaultValue={address}
           required={true}
         />
         <p className="text-error text-sm h-1.5">
-          {formState?.errors.streetAddress}
+          {formState?.errors.address}
         </p>
       </div>
 
@@ -131,16 +151,16 @@ export default function LocationForm({ tags, location, type }: LocationFormProps
       </div>
 
       <div className="flex flex-col mt-4">
-        <label htmlFor="state" className="label flex">
+        <label htmlFor="stateAbbreviation" className="label flex">
           State
         </label>
         <Select
           options={stateOptions}
-          defaultValue={state !== "" ? state : "Select an option"}
-          name="state"
-          id="state"
+          defaultValue={stateAbbreviation !== "" ? stateAbbreviation : "Select an option"}
+          name="stateAbbreviation"
+          id="stateAbbreviation"
         />
-        <p className="text-error text-sm h-1.5">{formState?.errors.state}</p>
+        <p className="text-error text-sm h-1.5">{formState?.errors.stateAbbreviation}</p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -148,16 +168,18 @@ export default function LocationForm({ tags, location, type }: LocationFormProps
           ZIP Code
         </label>
         <input
-          id="zip"
-          name="zip"
-          type="number"
+          id="postalCode"
+          name="postalCode"
+          type="text"
           className="input input-lg flex w-full"
           autoComplete="off"
-          defaultValue={zip}
+          defaultValue={postalCode}
           required={true}
         />
-        <p className="text-error text-sm h-1.5">{formState?.errors.zip}</p>
+        <p className="text-error text-sm h-1.5">{formState?.errors.postalCode}</p>
       </div>
+
+      <input type="hidden" id="countryCode" name="countryCode" value="US" />
 
       <div className="flex flex-col mt-4">
         <label className="label flex">Images</label>
@@ -166,7 +188,7 @@ export default function LocationForm({ tags, location, type }: LocationFormProps
             inputName="images"
             items={fileUploaderItems}
             multiple={true}
-            buttonLabel = "Click here to add images"
+            buttonLabel="Click here to add images"
           />
         </div>
       </div>

@@ -1,15 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import {
+  LocationFeature,
+  LocationFeatureCollection,
+} from "@notthesamadamsguy/location-finder-types";
 
-import { Location } from "@/types/locations.types";
 import { TableData } from "@/types/tables.types";
 import { deleteLocation } from "@/formActions/admin/locations";
 import TableActionControls from "@/components/features/admin/TableActionControls";
 import { ClientTable } from "@/components/ui/ClientTable";
 
-export default function LocationsTable({ data }: { data: Location[] }) {
-  const [locs, setLocs] = useState<Location[]>(data);
+export default function LocationsTable({
+  data,
+}: {
+  data: LocationFeatureCollection;
+}) {
+  const [locs, setLocs] = useState<LocationFeature[]>(data.features);
   const tableData = mapLocationsToTableData(locs);
 
   const handleDeleteClick = async (locationId: string) => {
@@ -23,16 +30,16 @@ export default function LocationsTable({ data }: { data: Location[] }) {
 
   return <ClientTable data={tableData} paginated={true} itemsPerPage={10} />;
 
-  function mapLocationsToTableData(locs: Location[]): TableData {
+  function mapLocationsToTableData(locs: LocationFeature[]): TableData {
     const headers = ["Name", "Actions"];
 
     const values = locs.map((loc, index) => {
       return [
-        loc.name,
+        loc.properties.name,
         <TableActionControls
           key={"ac-" + index}
           itemId={loc.id}
-          itemName={loc.name}
+          itemName={loc.properties.name}
           editLinkUrl="/admin/locations"
           onDeleteClick={() => handleDeleteClick(loc.id)}
         />,
