@@ -1,4 +1,7 @@
-import { SelectOption } from "@/app/lib/definitions";
+export type SelectOption = {
+  key: string;
+  value: string;
+};
 
 export default function Select({
   options,
@@ -22,7 +25,7 @@ export default function Select({
   return (
     <select
       defaultValue={defaultValue}
-      className={`select w-full ${className}`}
+      className={`select input input-lg flex w-full ${className}`}
       name={name}
       id={id}
       data-testid="select"
