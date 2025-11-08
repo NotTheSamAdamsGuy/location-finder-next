@@ -22,7 +22,7 @@ export default function LoginForm() {
           id="username"
           name="username"
           type="text"
-          className="input flex"
+          className="input input-lg flex"
           required={true}
         />
         <p className="text-error text-sm h-1.5">{state?.errors?.username}</p>
@@ -36,7 +36,7 @@ export default function LoginForm() {
           id="password"
           name="password"
           type="password"
-          className="input flex"
+          className="input input-lg flex"
           required={true}
         />
         <p className="text-error text-sm h-1.5">{state?.errors?.password}</p>
