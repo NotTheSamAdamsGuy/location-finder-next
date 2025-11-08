@@ -2,8 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-
-import { MapboxSuggestion } from "@/types/mapbox.types";
+import { MapSearchReply } from "@notthesamadamsguy/location-finder-types";
 
 type LocationSearchFormState =
   | {
@@ -13,11 +12,6 @@ type LocationSearchFormState =
       message?: string;
     }
   | undefined;
-
-type MapSearchReply = {
-  suggestions: MapboxSuggestion[];
-  sessionToken: string;
-};
 
 export const getLocationSuggestions = async (
   searchText: string

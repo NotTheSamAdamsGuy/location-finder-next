@@ -2,9 +2,9 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useDebounce } from "@uidotdev/usehooks";
+import { MapboxSuggestion } from "@notthesamadamsguy/location-finder-types";
 
 import AutocompleteTextbox from "@/components/ui/AutocompleteTextbox";
-import { MapboxSuggestion } from "@/types/mapbox.types";
 import {
   getLocationSuggestions,
   getMapLocationCoordinates,

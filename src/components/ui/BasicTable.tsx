@@ -1,4 +1,4 @@
-import { TableData } from "@/app/lib/definitions";
+import { TableData } from "@/types/tables.types";
 
 export function BasicTable({ data }: { data: TableData }): React.ReactNode {
   return (

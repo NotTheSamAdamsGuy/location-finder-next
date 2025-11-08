@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
+import { UserProfile } from "@notthesamadamsguy/location-finder-types";
 
 import { getUser } from "@/lib/session";
 import LogoutLink from "@/components/features/auth/LogoutLink";
-import { User } from "@/types/user.types";
 
 export default async function Header() {
   const siteName = process.env.SITE_NAME;
 
   const token: string = (await cookies()).get("token")?.value as string;
-  const user: User = await getUser(token);
+  const user: UserProfile = await getUser(token);
 
   return (
     <header>

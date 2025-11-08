@@ -11,6 +11,7 @@ import { getNearbyLocations } from "@/lib/api/locations";
 import FeatureCard from "./FeatureCard";
 import Marker from "./Marker";
 import Popup from "./Popup";
+import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
 
 export default function MapListComponent() {
   const searchParams = useSearchParams();
@@ -71,7 +72,10 @@ export default function MapListComponent() {
         (feature) => feature.id === evt.currentTarget.dataset["id"]
       ) || null;
 
-    dispatch({ type: "SELECT_LOCATION", payload: selectedLocation });
+    dispatch({
+      type: "SELECT_LOCATION",
+      payload: selectedLocation as LocationFeature | null,
+    });
   };
 
   // Load map data
@@ -151,7 +155,7 @@ export default function MapListComponent() {
   const locationCards = state.featureCollection.features.map((feature) => (
     <FeatureCard
       key={`card-${feature.id}`}
-      feature={feature}
+      feature={feature as LocationFeature}
       onClick={handleFeatureCardClick}
     />
   ));
@@ -159,10 +163,12 @@ export default function MapListComponent() {
   const handleMarkerClick = (evt: React.MouseEvent<HTMLDivElement>) => {
     const id = evt.currentTarget.dataset["id"];
     const payload =
-      state.featureCollection.features!.find(
-        (feature) => feature.id === id
-      ) || null;
-    dispatch({ type: "SELECT_LOCATION", payload: payload });
+      state.featureCollection.features!.find((feature) => feature.id === id) ||
+      null;
+    dispatch({
+      type: "SELECT_LOCATION",
+      payload: payload as LocationFeature | null,
+    });
   };
 
   return (
@@ -179,7 +185,7 @@ export default function MapListComponent() {
               <Marker
                 key={`marker-${feature.id}`}
                 map={mapRef.current!}
-                feature={feature}
+                feature={feature as LocationFeature}
                 isActive={state.selectedFeature === feature}
                 onClick={handleMarkerClick}
               />
@@ -189,7 +195,9 @@ export default function MapListComponent() {
           <Popup map={mapRef.current} activeFeature={state.selectedFeature} />
         )}
       </div>
-      <div className="flex flex-col w-full sm:w-1/2 h-full">{locationCards}</div>
+      <div className="flex flex-col w-full sm:w-1/2 h-full">
+        {locationCards}
+      </div>
     </div>
   );
 }
