@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { UserProfile } from "@notthesamadamsguy/location-finder-types";
 
 export const getAllUsernames = async (): Promise<string[]> => {
   const token = (await cookies()).get("token")?.value;
@@ -31,7 +32,7 @@ export const getAllUsernames = async (): Promise<string[]> => {
   }
 };
 
-export const getUserProfile = async (username: string) => {
+export const getUserProfile = async (username: string): Promise<UserProfile | null> => {
   const token = (await cookies()).get("token")?.value;
 
   const requestOptions = {

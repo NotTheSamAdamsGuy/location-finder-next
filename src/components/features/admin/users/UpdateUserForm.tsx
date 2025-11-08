@@ -1,29 +1,32 @@
 "use client";
 
 import { useActionState } from "react";
+import { UserProfile } from "@notthesamadamsguy/location-finder-types";
 
 import { updateUser } from "@/formActions/admin/users";
 import Select from "@/components/ui/Select";
-import { User } from "@/types/user.types";
+import { USER_ROLES } from "@/lib/constants";
 
 type UserFormProps = {
-  user: User;
+  user: UserProfile;
 };
 
 export default function UpdateUserForm({ user }: UserFormProps) {
   const formAction = updateUser;
   const [formState, action, pending] = useActionState(formAction, undefined);
 
-  const roleOptions = [{name: "user", value: "User"}, {name: "admin", value: "Admin"}].map((role) => {
-      return { key: role.name, value: role.value };
-    });
+  const roleOptions = USER_ROLES.map((role) => {
+    return { key: role.name, value: role.value };
+  });
 
   // prioritize formState values over values passed in as user props; fallback to blank/empty/false values.
   const username = user?.username || "";
-  const password = formState?.fields.password?.toString() || user?.password || "";
+  const password = formState?.fields.password?.toString() || "";
   const newPassword = formState?.fields.newPassword?.toString() || "";
-  const firstName = formState?.fields.firstName?.toString() || user?.firstName || "";
-  const lastName = formState?.fields.lastName?.toString() || user?.lastName || "";
+  const firstName =
+    formState?.fields.firstName?.toString() || user?.firstName || "";
+  const lastName =
+    formState?.fields.lastName?.toString() || user?.lastName || "";
   const role = formState?.fields.role?.toString() || user?.role || "";
 
   return (
@@ -55,9 +58,7 @@ export default function UpdateUserForm({ user }: UserFormProps) {
           autoComplete="off"
           defaultValue={password}
         />
-        <p className="text-error text-sm h-1.5">
-          {formState?.errors.password}
-        </p>
+        <p className="text-error text-sm h-1.5">{formState?.errors.password}</p>
       </div>
 
       <div className="flex flex-col mt-4">

@@ -1,13 +1,14 @@
 "use client";
 
+import { UserProfile } from "@notthesamadamsguy/location-finder-types";
+
 import { logout } from "@/formActions/auth";
-import { User } from "@/types/user.types";
 
 export default function LogoutLink({
   user,
   className,
 }: {
-  user: User;
+  user: UserProfile;
   className?: string;
 }) {
   const handleLogoutClick = async () => {

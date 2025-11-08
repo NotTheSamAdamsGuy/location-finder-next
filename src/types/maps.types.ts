@@ -1,9 +1,4 @@
-import { LocationFeature, LocationFeatureCollection } from "@notthesamadamsguy/location-finder-types";
-
-export type Coordinates = {
-  latitude: number;
-  longitude: number;
-};
+import { Coordinates, LocationFeature, LocationFeatureCollection } from "@notthesamadamsguy/location-finder-types";
 
 export type MapListState = {
   zoom: number;

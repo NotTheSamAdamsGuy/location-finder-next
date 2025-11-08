@@ -1,4 +1,4 @@
-import { forbidden } from "next/navigation";
+import { forbidden, notFound } from "next/navigation";
 
 import { getUserProfile } from "@/lib/api/users";
 import { verifySession } from "@/lib/session";
@@ -19,6 +19,10 @@ export default async function UpdateUserAdminPage({
 
   const { username } = await params;
   const user = await getUserProfile(username);
+
+  if (!user) {
+    notFound();
+  }
 
   return (
     <div>

@@ -4,8 +4,7 @@ import { cache } from "react";
 import { redirect } from "next/navigation";
 import { JWTPayload, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-
-import { User } from "@/types/user.types";
+import { User } from "@notthesamadamsguy/location-finder-types";
 
 const secretKey = process.env.JWT_SECRET_KEY;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -41,7 +40,7 @@ export async function getUser(token: string) {
   const session: JWTPayload = await decrypt(token);
   const user: User = {
     username: "",
-    role: "",
+    role: "USER",
     firstName: "",
     lastName: "",
     password: "",
@@ -50,7 +49,7 @@ export async function getUser(token: string) {
 
   if (session) {
     user.username = session.username as string;
-    user.role = session.role as string;
+    user.role = session.role as "USER" | "ADMIN";
   } 
 
   return user;
