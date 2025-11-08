@@ -50,16 +50,16 @@ export default function Multiselect({
     <label className="relative">
       <input type="checkbox" className="hidden peer" />
 
-      <div className="select w-full" tabIndex={0}>
+      <div className="select input input-lg w-full" tabIndex={0}>
         {dropdownMessage}
       </div>
 
-      <div className="hidden peer-checked:flex absolute w-full shadow p-2 bg-[var(--color-base-100)] z-10">
+      <div className="hidden peer-checked:flex absolute w-full shadow p-2 bg-(--color-base-100) z-10">
         <ul>
           {options.map((option) => {
             return (
               <li key={option.value}>
-                <label className="label flex whitespace-nowrap cursor-pointer px-2 py-1 text-[var(--color-base-content)]">
+                <label className="label flex whitespace-nowrap cursor-pointer px-2 py-1 text-(--color-base-content)">
                   <input
                     type="checkbox"
                     name={formFieldValue}

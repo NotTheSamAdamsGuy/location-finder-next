@@ -197,7 +197,7 @@ function FileCardList({ items, onRemoveFileCard }: FileCardListProps) {
   );
 
   return (
-    <div className="flex flex-col gap-y-3 p-3 border border-gray-200 rounded bg-[repeating-linear-gradient(45deg,_#e1e1e1_0,_#e1e1e1_1px,_transparent_0,_transparent_50%)] bg-[size:10px_10px]">
+    <div className="flex flex-col gap-y-3 p-3 border border-gray-200 rounded bg-[repeating-linear-gradient(45deg,#e1e1e1_0,#e1e1e1_1px,transparent_0,transparent_50%)] bg-size-[10px_10px]">
       {fileCards.length > 0 ? (
         fileCards
       ) : (
