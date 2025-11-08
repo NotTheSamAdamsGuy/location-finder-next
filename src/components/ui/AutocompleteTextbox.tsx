@@ -66,7 +66,7 @@ export default function AutocompleteTextbox({
 
   return (
     <>
-      <label className={twMerge("input w-100", className)}>
+      <label className={twMerge("input w-full sm:w-96", className)}>
         <FontAwesomeIcon icon={faSearch} />
         <input
           type="search"
