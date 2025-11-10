@@ -2,27 +2,33 @@
 @plugin "daisyui";
 
 .mapboxgl-popup-close-button {
-  color: black;
   height: 1.5rem;
   width: 1.5rem;
   font-size: 1.5rem;
 }
 
 @media (max-width: 639px) {
-  .mapboxgl-custom-popup {
+  .mapboxgl-popup {
+    --card-p: 1rem;
+
     transform: none !important;
     top: auto !important;
     left: auto !important;
-    bottom: 100px !important;
+    bottom: calc(var(--spacing) * 4);
     justify-self: center;
     width: 100dvw;
-  }
+    z-index: 20;
+    max-width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
 
-  .mapboxgl-custom-popup .mapboxgl-popup-content {
-    background: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-    box-shadow: none !important;
+    .mapboxgl-popup-content {
+      background: none !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      width: 96vw;
+    }
   }
 
   .mapboxgl-popup-tip {
@@ -31,35 +37,12 @@
 
   .mapboxgl-popup-anchor-left,
   .mapboxgl-popup-anchor-right,
-  .mapboxgl-popup-anchor-bottom, 
-  .mapboxgl-popup-anchor-bottom-left, 
+  .mapboxgl-popup-anchor-top,
+  .mapboxgl-popup-anchor-top-left,
+  .mapboxgl-popup-anchor-top-right,
+  .mapboxgl-popup-anchor-bottom,
+  .mapboxgl-popup-anchor-bottom-left,
   .mapboxgl-popup-anchor-bottom-right {
     flex-direction: row !important;
   }
-
-  /* .mapboxgl-popup-anchor-bottom, 
-  .mapboxgl-popup-anchor-bottom-left, 
-  .mapboxgl-popup-anchor-bottom-right {
-    flex-direction: column !important;
-  } */
 }
-
-/* .mapboxgl-popup {
-  transform: none !important;
-  top: auto !important;
-  left: auto !important;
-  bottom: 100px !important;
-  justify-self: center;
-  width: 100dvw;
-}
-
-.mapboxgl-popup-content {
-  background: none !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
-  box-shadow: none !important;
-}
-
-.mapboxgl-popup-anchor-top .mapboxgl-popup-tip {
-  display: none;
-} */

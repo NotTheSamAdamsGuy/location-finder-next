@@ -7,6 +7,7 @@ export type MapListState = {
   selectedFeature: LocationFeature | null;
   displayPopup: boolean;
   mapLoaded: boolean;
+  activeView: string;
 };
 
 export type MapListAction =
@@ -14,4 +15,5 @@ export type MapListAction =
   | { type: "LOAD_LOCATIONS"; payload: LocationFeatureCollection }
   | { type: "REPOSITION_MAP"; payload: Coordinates }
   | { type: "SELECT_LOCATION"; payload: LocationFeature | null }
-  | { type: "MAP_LOADED"; payload: boolean };
+  | { type: "MAP_LOADED"; payload: boolean }
+  | { type: "SWITCH_VIEW"; payload: null };

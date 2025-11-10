@@ -12,6 +12,9 @@ import FeatureCard from "./FeatureCard";
 import Marker from "./Marker";
 import Popup from "./Popup";
 import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
+import { faMap } from "@fortawesome/free-regular-svg-icons";
+import { faList } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function MapListComponent() {
   const searchParams = useSearchParams();
@@ -43,6 +46,11 @@ export default function MapListComponent() {
           ...state,
           mapLoaded: action.payload,
         };
+      case "SWITCH_VIEW":
+        return {
+          ...state,
+          activeView: state.activeView === "list" ? "map" : "list",
+        };
       default:
         return state;
     }
@@ -51,7 +59,7 @@ export default function MapListComponent() {
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
   const initialState: MapListState = {
-    zoom: parseInt(process.env.NEXT_PUBLIC_DEFAULT_ZOOMLEVEL || "13", 10),
+    zoom: parseInt(searchParams.get("zoom") || process.env.NEXT_PUBLIC_DEFAULT_ZOOMLEVEL || "13", 10),
     featureCollection: { type: "FeatureCollection", features: [] },
     coordinates: {
       latitude: parseFloat(searchParams.get("lat")!),
@@ -60,6 +68,7 @@ export default function MapListComponent() {
     selectedFeature: null,
     displayPopup: false,
     mapLoaded: false,
+    activeView: "list",
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -72,10 +81,7 @@ export default function MapListComponent() {
         (feature) => feature.id === evt.currentTarget.dataset["id"]
       ) || null;
 
-    dispatch({
-      type: "SELECT_LOCATION",
-      payload: selectedLocation as LocationFeature | null,
-    });
+    // TODO: take user to detail page; determine if we need to set the selected location or not
   };
 
   // Load map data
@@ -171,9 +177,22 @@ export default function MapListComponent() {
     });
   };
 
+  const handleButtonClick = () => {
+    dispatch({ type: "SWITCH_VIEW", payload: null });
+  };
+
+  const buttonText = state.activeView === "list" ? "Map" : "List";
+  const buttonIcon = state.activeView === "list" ? faMap : faList;
+
   return (
-    <div className="flex w-full h-[calc(100vh-64px)]">
-      <div className="flex w-full sm:w-1/2 h-full">
+    <div className="flex w-full h-[calc(100vh-64px)] relative overflow-hidden sm:overflow-auto">
+      {/* <div className="flex w-full sm:w-1/2 h-full"> */}
+      <div
+        className={twMerge(
+          "flex flex-col h-full w-full sm:w-1/2",
+          state.activeView === "map" ? "" : "absolute right-[-500px] sm:static sm:right-0 overflow-hidden"
+        )}
+      >
         <div
           id="map-container"
           ref={mapContainerRef}
@@ -186,7 +205,6 @@ export default function MapListComponent() {
                 key={`marker-${feature.id}`}
                 map={mapRef.current!}
                 feature={feature as LocationFeature}
-                isActive={state.selectedFeature === feature}
                 onClick={handleMarkerClick}
               />
             );
@@ -195,8 +213,17 @@ export default function MapListComponent() {
           <Popup map={mapRef.current} activeFeature={state.selectedFeature} />
         )}
       </div>
-      <div className="flex flex-col w-full sm:w-1/2 h-full">
+      {/* <div className="flex flex-col w-full sm:w-1/2 h-full"> */}
+      <div
+        className={twMerge(
+          "flex flex-col h-[calc(100vh-64px)] w-full sm:w-1/2 p-2 overflow-auto",
+          state.activeView === "list" ? "" : "absolute right-[-500px] sm:static sm:right-0"
+        )}
+      >
         {locationCards}
+      </div>
+      <div className="fixed bottom-16 w-full flex justify-center z-10 sm:hidden">
+        <button className="btn" onClick={handleButtonClick}><FontAwesomeIcon icon={buttonIcon} /> {buttonText}</button>
       </div>
     </div>
   );

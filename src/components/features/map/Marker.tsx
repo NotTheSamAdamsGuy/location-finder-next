@@ -6,13 +6,11 @@ import { createPortal } from "react-dom";
 type MarkerProps = {
   map: mapboxgl.Map;
   feature: LocationFeature;
-  isActive: boolean;
   onClick: (evt: React.MouseEvent<HTMLDivElement>) => void;
 };
 export default function Marker({
   map,
   feature,
-  isActive,
   onClick,
 }: MarkerProps) {
   const { geometry, id } = feature;
@@ -43,7 +41,7 @@ export default function Marker({
           className="h-[41px] w-[27px] cursor-pointer"
           data-id={id}
         >
-          <MarkerPin fillColor={isActive ? "red" : undefined} />
+          <MarkerPin />
         </div>,
         contentRef.current
       )}
