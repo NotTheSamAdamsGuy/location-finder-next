@@ -59,7 +59,12 @@ export default function MapListComponent() {
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
   const initialState: MapListState = {
-    zoom: parseInt(searchParams.get("zoom") || process.env.NEXT_PUBLIC_DEFAULT_ZOOMLEVEL || "13", 10),
+    zoom: parseInt(
+      searchParams.get("zoom") ||
+        process.env.NEXT_PUBLIC_DEFAULT_ZOOMLEVEL ||
+        "13",
+      10
+    ),
     featureCollection: { type: "FeatureCollection", features: [] },
     coordinates: {
       latitude: parseFloat(searchParams.get("lat")!),
@@ -185,12 +190,19 @@ export default function MapListComponent() {
   const buttonIcon = state.activeView === "list" ? faMap : faList;
 
   return (
-    <div className="flex w-full h-[calc(100vh-64px)] relative overflow-hidden sm:overflow-auto">
-      {/* <div className="flex w-full sm:w-1/2 h-full"> */}
+    <div
+      className={twMerge(
+        "flex w-full h-[calc(100vh-64px)] relative overflow-hidden",
+        "md:overflow-auto"
+      )}
+    >
       <div
         className={twMerge(
-          "flex flex-col h-full w-full sm:w-1/2",
-          state.activeView === "map" ? "" : "absolute right-[-500px] sm:static sm:right-0 overflow-hidden"
+          "flex flex-col h-full w-full",
+          "md:flex-1",
+          state.activeView === "map"
+            ? ""
+            : "absolute right-[-2000px] md:static md:right-0 overflow-hidden"
         )}
       >
         <div
@@ -213,17 +225,29 @@ export default function MapListComponent() {
           <Popup map={mapRef.current} activeFeature={state.selectedFeature} />
         )}
       </div>
-      {/* <div className="flex flex-col w-full sm:w-1/2 h-full"> */}
       <div
         className={twMerge(
-          "flex flex-col h-[calc(100vh-64px)] w-full sm:w-1/2 p-2 overflow-auto",
-          state.activeView === "list" ? "" : "absolute right-[-500px] sm:static sm:right-0"
+          "flex h-[calc(100vh-64px)] w-full p-4 overflow-auto",
+          "md:flex-none md:w-96",
+          state.activeView === "list"
+            ? ""
+            : "absolute right-[-2000px] md:static md:right-0"
         )}
       >
-        {locationCards}
+        <div
+          className={twMerge(
+            "flex flex-col",
+            "sm:flex-row sm:justify-between sm:flex-wrap sm:gap-4 sm-h-[100px]",
+            "md:flex-col md:flex-nowrap md:h-0"
+          )}
+        >
+          {locationCards}
+        </div>
       </div>
-      <div className="fixed bottom-16 w-full flex justify-center z-10 sm:hidden">
-        <button className="btn" onClick={handleButtonClick}><FontAwesomeIcon icon={buttonIcon} /> {buttonText}</button>
+      <div className="fixed bottom-16 w-full flex justify-center z-10 md:hidden">
+        <button className="btn" onClick={handleButtonClick}>
+          <FontAwesomeIcon icon={buttonIcon} /> {buttonText}
+        </button>
       </div>
     </div>
   );
