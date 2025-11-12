@@ -1,0 +1,171 @@
+"use client";
+
+import Image, { StaticImageData } from "next/image";
+import { useActionState, useCallback, useRef, useState } from "react";
+import { MapboxSuggestion } from "@notthesamadamsguy/location-finder-types";
+
+import {
+  getLocationSuggestions,
+  getMapLocationCoordinates,
+} from "@/formActions/search";
+import Searchbox from "@/components/ui/Searchbox";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { twMerge } from "tailwind-merge";
+
+type ListItemData = {
+  name: string;
+  id: string;
+};
+
+export default function HeroSearchForm({
+  background,
+}: {
+  background: StaticImageData;
+}) {
+  const [selectedItem, setSelectedItem] = useState<ListItemData | null>(null);
+  const [formState, action, pending] = useActionState(
+    getMapLocationCoordinates,
+    undefined
+  );
+  const [sessionToken, setSessionToken] = useState<string>("");
+  const formRef = useRef(null);
+
+  const handleListItemClick = (evt: React.MouseEvent<HTMLLIElement>) => {
+    const target = evt.currentTarget;
+
+    if (target) {
+      const selectedItem: ListItemData = {
+        name: target.textContent,
+        id: target.dataset["value"] || "",
+      };
+
+      setSelectedItem(selectedItem);
+      submitForm(selectedItem);
+    }
+  };
+
+  const handleSearchButtonClick = (
+    suggestion: MapboxSuggestion | undefined
+  ) => {
+    if (suggestion) {
+      const selectedItem: ListItemData = {
+        name: suggestion.name,
+        id: suggestion.mapbox_id,
+      };
+      setSelectedItem(selectedItem);
+      submitForm(selectedItem);
+    }
+  };
+
+  /**
+   * Submit the form programmatically
+   * @param {ListItemData} selectedItem the item selected
+   */
+  const submitForm = (selectedItem: ListItemData) => {
+    if (formRef.current) {
+      const typedFormRef = formRef.current as HTMLFormElement;
+      const locationIdEl = typedFormRef.children.namedItem(
+        "mapboxLocationId"
+      ) as HTMLInputElement;
+      locationIdEl.value = selectedItem.id;
+      typedFormRef.requestSubmit();
+    }
+  };
+
+  const listItemTemplate = (item: MapboxSuggestion) => {
+    return (
+      <li
+        className="hover:bg-base-300 cursor-pointer w-100 px-3 py-1.5"
+        key={item.mapbox_id}
+        data-value={item.mapbox_id}
+        onClick={handleListItemClick}
+      >
+        {item.name}
+      </li>
+    );
+  };
+
+  const searchCallback = useCallback(
+    async (searchText: string): Promise<MapboxSuggestion[]> => {
+      let results: MapboxSuggestion[] = [];
+      if (searchText.trim() === "") {
+        return [];
+      }
+
+      try {
+        const data = await getLocationSuggestions(searchText);
+        setSessionToken(data.sessionToken);
+        results = data.suggestions;
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+      }
+
+      return results;
+    },
+    []
+  );
+
+  return (
+    <div className="w-full h-full relative">
+      <Image
+        src={background}
+        alt="Background"
+        fill
+        sizes="100vw"
+        style={{
+          objectFit: "cover",
+          zIndex: -1,
+        }}
+        priority
+      />
+      <div className="hero h-64 sm:h-96 px-16">
+        <div className="w-full flex-col">
+          <p
+            className={twMerge(
+              "flex justify-center text-white text-4xl font-extrabold",
+              "sm:text-5xl",
+              "md:text-6xl md:justify-start"
+            )}
+          >
+            Locations. Places.
+          </p>
+          <p
+            className={twMerge(
+              "flex justify-center text-white text-4xl font-extrabold mb-4",
+              "sm:text-5xl",
+              "md:text-6xl md:justify-start"
+            )}
+          >
+            Things to See.
+          </p>
+          <form
+            action={action}
+            ref={formRef}
+            className="flex justify-center md:justify-start"
+          >
+            <Searchbox
+              textboxClassName="input w-full bg-base-100 rounded-r-none sm:w-96"
+              listClassName="bg-base-100 rounded-box shadow-md w-100 border border-base-300 absolute"
+              outerWrapperClassName="join justify-center w-full sm:w-96 md:justify-start"
+              innerWrapperClassName="join-item w-full sm:w-96"
+              buttonClassName="btn btn-base-100 join-item"
+              buttonIcon={<FontAwesomeIcon icon={faSearch} />}
+              debounceRate={250}
+              placeholderText="Enter an address, neighborhood, city, or ZIP code"
+              listItemTemplate={listItemTemplate}
+              onButtonClick={handleSearchButtonClick}
+              searchFn={searchCallback}
+            />
+            <input type="hidden" name="sessionToken" value={sessionToken} />
+            <input
+              type="hidden"
+              name="mapboxLocationId"
+              value={selectedItem?.id || ""}
+            />
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
