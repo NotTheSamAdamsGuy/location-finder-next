@@ -227,8 +227,8 @@ export default function MapListComponent() {
       </div>
       <div
         className={twMerge(
-          "flex h-[calc(100vh-64px)] w-full p-4 overflow-auto",
-          "md:flex-none md:w-96",
+          "flex min-h-[calc(100vh-64px)] w-full p-4 overflow-auto",
+          "md:flex-none md:w-96 md:shadow-[-2px_0_5px_0px_rgba(0,0,0,0.5)] md:z-10",
           state.activeView === "list"
             ? ""
             : "absolute right-[-2000px] md:static md:right-0"
@@ -236,7 +236,7 @@ export default function MapListComponent() {
       >
         <div
           className={twMerge(
-            "flex flex-col",
+            "flex flex-col gap-2",
             "sm:flex-row sm:justify-between sm:flex-wrap sm:gap-4 sm-h-[100px]",
             "md:flex-col md:flex-nowrap md:h-0"
           )}

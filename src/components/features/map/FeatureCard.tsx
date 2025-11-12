@@ -16,7 +16,7 @@ export default function FeatureCard({ feature, onClick }: FeatureCardProps) {
   return (
     <div
       className={twMerge(
-        "card bg-base-100 w-full h-60 shadow-sm hover:shadow-md cursor-pointer mb-2",
+        "card bg-base-100 w-full h-60 shadow-sm hover:shadow-md/20 cursor-pointer",
         "sm:flex-1 sm:min-w-[300px]",
         "md:flex-none md:min-w-auto"
       )}

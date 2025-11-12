@@ -48,14 +48,14 @@ export default function Popup({ map, activeFeature }: PopupProps) {
   return (
     <>
       {createPortal(
-        <div className="portal-content card bg-base-100">
-          <figure className="h-36">
+        <div className="portal-content card">
+          <figure className="h-36 md:h-auto">
             <img
               src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
               alt={activeFeature?.properties.name}
             />
           </figure>
-          <div className="card-body">
+          <div className="card-body bg-base-100 rounded-b-lg">
             <h2 className="card-title">{activeFeature?.properties.name}</h2>
             <p>{fullAddress}</p>
           </div>
