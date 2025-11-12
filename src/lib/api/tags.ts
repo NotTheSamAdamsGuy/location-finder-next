@@ -61,3 +61,79 @@ export const getTag = async (tagToFind: string) => {
     throw err;
   }
 };
+
+interface PostDataType {
+  tag: string;
+}
+export const postTag = async (postData: PostDataType): Promise<Response> => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(postData),
+  };
+
+  try {
+    return await fetch(
+      `${process.env.API_HOST}:${process.env.API_PORT}/tags`,
+      requestOptions
+    );
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+interface PutDataType {
+  newTag: string;
+  currentTag: string;
+}
+export const putTag = async (putData: PutDataType): Promise<Response> => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(putData),
+  };
+
+  try {
+    return await fetch(
+      `${process.env.API_HOST}:${process.env.API_PORT}/tags`,
+      requestOptions
+    );
+  } catch (err) {
+    // TODO: make this work properly - it isn't writing to the console - do we need to return something?
+    console.log(err);
+    throw err;
+  }
+};
+
+export const deleteTag = async (tag: string): Promise<Response> => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    return await fetch(
+      `${process.env.API_HOST}:${process.env.API_PORT}/tags/${tag}`,
+      requestOptions
+    );
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};

@@ -1,8 +1,9 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { z } from "zod";
+
+import { deleteLocation, postLocation, putLocation } from "@/lib/api/locations";
 
 type AddLocationFormState =
   | {
@@ -155,35 +156,9 @@ export const addLocation = async (
     }
   }
 
-  const token = (await cookies()).get("token")?.value;
+  const response = await postLocation(postData);
 
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: postData,
-  };
-
-  // we can't include a redirect in a try/catch block, so use a variable to track if we should redirect
-  let success = false;
-  let response;
-
-  try {
-    response = await fetch(
-      `${process.env.API_HOST}:${process.env.API_PORT}/locations`,
-      requestOptions
-    );
-
-    if (response.ok) {
-      success = true;
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-
-  if (success) {
+  if (response.ok) {
     redirect("/admin/locations");
   } else {
     const data = await response.json();
@@ -300,35 +275,9 @@ export const updateLocation = async (
     }
   }
 
-  const token = (await cookies()).get("token")?.value;
+  const response = await putLocation(putData);
 
-  const requestOptions = {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: putData,
-  };
-
-  // we can't include a redirect in a try/catch block, so use a variable to track if we should redirect
-  let success = false;
-  let response;
-
-  try {
-    response = await fetch(
-      `${process.env.API_HOST}:${process.env.API_PORT}/locations`,
-      requestOptions
-    );
-
-    if (response.ok) {
-      success = true;
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-
-  if (success) {
+  if (response.ok) {
     redirect("/admin/locations");
   } else {
     const data = await response.json();
@@ -336,35 +285,10 @@ export const updateLocation = async (
   }
 };
 
-export const deleteLocation = async (locationId: string) => {
-  const token = (await cookies()).get("token")?.value;
+export const removeLocation = async (locationId: string) => {
+  const response = await deleteLocation(locationId);
 
-  const requestOptions = {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  let response;
-  let success = false;
-
-  try {
-    response = await fetch(
-      `${process.env.API_HOST}:${process.env.API_PORT}/locations/${locationId}`,
-      requestOptions
-    );
-
-    if (response.ok) {
-      success = true;
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-
-  if (success) {
+  if (response.ok) {
     return;
   } else {
     const data = await response.json();

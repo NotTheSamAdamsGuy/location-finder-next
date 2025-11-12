@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { TableData } from "@/types/tables.types";
-import { deleteTag } from "@/formActions/admin/tags";
+import { removeTag } from "@/formActions/admin/tags";
 import { ClientTable } from "@/components/ui/ClientTable";
 import TableActionControls from "@/components/features/admin//TableActionControls";
 
@@ -13,7 +13,7 @@ export default function TagsTable({ data }: { data: string[] }) {
 
   const handleDeleteClick = async (tagToDelete: string) => {
     // send request to delete tag
-    await deleteTag(tagToDelete);
+    await removeTag(tagToDelete);
 
     // clear removed tag from state data
     const filteredTags = [...tags].filter((tag) => tag !== tagToDelete);

@@ -35,7 +35,9 @@ export const getAllLocations = async (): Promise<LocationFeatureCollection> => {
   }
 };
 
-export const getLocation = async (id: string): Promise<LocationFeature | null> => {
+export const getLocation = async (
+  id: string
+): Promise<LocationFeature | null> => {
   const token = (await cookies()).get("token")?.value;
 
   const requestOptions = {
@@ -107,6 +109,72 @@ export const getNearbyLocations = async ({
     } else {
       throw new Error("Unable to retrieve nearby locations");
     }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+export const postLocation = async (postData: FormData): Promise<Response> => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: postData,
+  };
+
+  try {
+    return await fetch(
+      `${process.env.API_HOST}:${process.env.API_PORT}/locations`,
+      requestOptions
+    );
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+export const putLocation = async (putData: FormData): Promise<Response> => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: putData,
+  };
+
+  try {
+    return await fetch(
+      `${process.env.API_HOST}:${process.env.API_PORT}/locations`,
+      requestOptions
+    );
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+export const deleteLocation = async (locationId: string): Promise<Response> => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    return await fetch(
+      `${process.env.API_HOST}:${process.env.API_PORT}/locations/${locationId}`,
+      requestOptions
+    );
   } catch (err) {
     console.log(err);
     throw err;

@@ -1,8 +1,9 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import z from "zod";
+
+import { deleteUser, postUser, putUser } from "@/lib/api/users";
 
 type UserFormState =
   | {
@@ -104,36 +105,10 @@ export const addUser = async (
     lastName: lastName,
     role: role
   };
+  
+  const response = await postUser(postData);
 
-  const token = (await cookies()).get("token")?.value;
-
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(postData),
-  };
-
-  // we can't include a redirect in a try/catch block, so use a variable to track if we should redirect
-  let success = false;
-
-  try {
-    const response = await fetch(
-      `${process.env.API_HOST}:${process.env.API_PORT}/users`,
-      requestOptions
-    );
-
-    if (response.ok) {
-      success = true;
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-
-  if (success) {
+  if (response.ok) {
     redirect("/admin/users");
   } else {
     throw new Error("Unable to add new user");
@@ -176,7 +151,7 @@ export const updateUser = async (
   const { password, newPassword, firstName, lastName, role } = validatedFields.data;
 
   const putData = {
-    username: formData.get("username"),
+    username: formData.get("username") as string,
     password: password,
     newPassword: newPassword,
     firstName: firstName,
@@ -184,70 +159,24 @@ export const updateUser = async (
     role: role
   };
 
-  const token = (await cookies()).get("token")?.value;
+  const response = await putUser(putData);
 
-  const requestOptions = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(putData),
-  };
-
-  // we can't include a redirect in a try/catch block, so use a variable to track if we should redirect
-  let success = false;
-
-  try {
-    const response = await fetch(
-      `${process.env.API_HOST}:${process.env.API_PORT}/users`,
-      requestOptions
-    );
-
-    if (response.ok) {
-      success = true;
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-
-  if (success) {
+  if (response.ok) {
     redirect("/admin/users");
   } else {
     throw new Error("Unable to update user");
   }
 };
 
-export const deleteUser = async (username: string) => {
-  const token = (await cookies()).get("token")?.value;
+/**
+ * Remove a user from the database.
+ * @param {string} username 
+ * @returns 
+ */
+export const removeUser = async (username: string) => {
+  const response = await deleteUser(username);
 
-  const requestOptions = {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  let response;
-  let success = false;
-
-  try {
-    response = await fetch(
-      `${process.env.API_HOST}:${process.env.API_PORT}/users/${username}`,
-      requestOptions
-    );
-
-    if (response.ok) {
-      success = true;
-    }
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-
-  if (success) {
+  if (response.ok) {
     return;
   } else {
     const data = await response.json();

@@ -7,7 +7,7 @@ import {
 } from "@notthesamadamsguy/location-finder-types";
 
 import { TableData } from "@/types/tables.types";
-import { deleteLocation } from "@/formActions/admin/locations";
+import { removeLocation } from "@/formActions/admin/locations";
 import TableActionControls from "@/components/features/admin/TableActionControls";
 import { ClientTable } from "@/components/ui/ClientTable";
 
@@ -21,7 +21,7 @@ export default function LocationsTable({
 
   const handleDeleteClick = async (locationId: string) => {
     // send request to delete location
-    await deleteLocation(locationId);
+    await removeLocation(locationId);
 
     // clear removed location from state data
     const filteredLocs = [...locs].filter((loc) => loc.id !== locationId);

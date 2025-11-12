@@ -32,7 +32,9 @@ export const getAllUsernames = async (): Promise<string[]> => {
   }
 };
 
-export const getUserProfile = async (username: string): Promise<UserProfile | null> => {
+export const getUserProfile = async (
+  username: string
+): Promise<UserProfile | null> => {
   const token = (await cookies()).get("token")?.value;
 
   const requestOptions = {
@@ -63,3 +65,86 @@ export const getUserProfile = async (username: string): Promise<UserProfile | nu
     throw err;
   }
 };
+
+interface PostData {
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+export const postUser = async (postData: PostData): Promise<Response> => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(postData),
+  };
+
+  try {
+    return await fetch(
+      `${process.env.API_HOST}:${process.env.API_PORT}/users`,
+      requestOptions
+    );
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+interface PutData {
+  username: string;
+  password: string;
+  newPassword: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+export const putUser = async (putData: PutData): Promise<Response> => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(putData),
+  };
+
+  try {
+    return await fetch(
+      `${process.env.API_HOST}:${process.env.API_PORT}/users`,
+      requestOptions
+    );
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+export const deleteUser = async (username: string): Promise<Response> => {
+  const token = (await cookies()).get("token")?.value;
+
+  const requestOptions = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    return await fetch(
+      `${process.env.API_HOST}:${process.env.API_PORT}/users/${username}`,
+      requestOptions
+    );
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
