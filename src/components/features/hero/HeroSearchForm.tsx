@@ -125,12 +125,12 @@ export default function HeroSearchForm({
         }}
         priority
       />
-      <div className="hero h-64 sm:h-96 px-16">
+      <div className="hero h-64 xs:h-96 px-16">
         <div className="w-full flex-col text-center md:text-start">
           <p
             className={twMerge(
               "flex justify-center text-white text-4xl font-extrabold",
-              "sm:text-5xl",
+              "xs:text-5xl",
               "md:text-6xl md:justify-start"
             )}
           >
@@ -139,7 +139,7 @@ export default function HeroSearchForm({
           <p
             className={twMerge(
               "flex justify-center text-white text-4xl font-extrabold mb-4",
-              "sm:text-5xl",
+              "xs:text-5xl",
               "md:text-6xl md:justify-start"
             )}
           >
