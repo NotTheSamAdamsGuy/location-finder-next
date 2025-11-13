@@ -1,10 +1,7 @@
-import { useDebounce } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
-
-// TODO: add internal debounce function so we don't have any dependencies other than React
 // TODO: add list item keyboard accessibility handling
-// TODO: export into a shared components library
 // TODO: add default styling
+// TODO: export into a shared components library - longer term
 
 /**
  * Represents the properties of the Searchbox component.
@@ -59,10 +56,10 @@ interface SearchboxProps<T> {
   buttonIcon?: React.ReactNode;
 
   /**
-   * The frequency (in milliseconds) used when debouncing inputs to the <input> element. Optional. Default is 250.
+   * The delay (in milliseconds) used when debouncing inputs to the <input> element. Optional. Default is 250.
    * @type {number}
    */
-  debounceRate?: number;
+  debounceDelay?: number;
 
   /**
    * The value for the 'placeholder' attribute of the <input> element. Optional. Default is "Search".
@@ -72,7 +69,7 @@ interface SearchboxProps<T> {
 
   /**
    * A function that generates elements for use in the list of search results using the provided item as input. Required.
-   * @param {T} item 
+   * @param {T} item
    * @returns {React.JSX.Element} a <li> element
    */
   listItemTemplate: (item: T) => React.JSX.Element;
@@ -91,6 +88,10 @@ interface SearchboxProps<T> {
   searchFn: (searchText: string) => Promise<Array<T>>;
 }
 
+/**
+ * A search input component that displays a list of suggestions as the user types.
+ * @param {SearchboxProps} props The properties of the Searchbox component
+ */
 export default function Searchbox<T>({
   id = "search",
   name = "search",
@@ -110,7 +111,7 @@ export default function Searchbox<T>({
       <path d="M17.545 15.467l-3.779-3.779a6.15 6.15 0 0 0 .898-3.21c0-3.417-2.961-6.377-6.378-6.377A6.185 6.185 0 0 0 2.1 8.287c0 3.416 2.961 6.377 6.377 6.377a6.15 6.15 0 0 0 3.115-.844l3.799 3.801a.953.953 0 0 0 1.346 0l.943-.943c.371-.371.236-.84-.135-1.211zM4.004 8.287a4.282 4.282 0 0 1 4.282-4.283c2.366 0 4.474 2.107 4.474 4.474a4.284 4.284 0 0 1-4.283 4.283c-2.366-.001-4.473-2.109-4.473-4.474z" />
     </svg>
   ),
-  debounceRate = 250,
+  debounceDelay = 250,
   placeholderText = "Search",
   listItemTemplate,
   onButtonClick,
@@ -119,7 +120,7 @@ export default function Searchbox<T>({
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState<Array<T>>([]);
   const [showList, setShowList] = useState(false);
-  const debouncedSearchText = useDebounce(searchText, debounceRate);
+  const debouncedSearchText = useDebounce(searchText, debounceDelay);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -178,4 +179,27 @@ export default function Searchbox<T>({
       </button>
     </div>
   );
+}
+
+/**
+ * Control the frequency at which a value is updated in state, particularly 
+ * in response to rapidly occurring events like user input or window resizing.
+ * @param {T} value the value that is changing quickly
+ * @param {number} delay the delay to use, in milliseconds.
+ * @returns {T} the debounced value
+ */
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 }
