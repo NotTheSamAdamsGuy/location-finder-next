@@ -74,14 +74,20 @@ export default function HeroSearchForm({
   };
 
   const listItemTemplate = (item: MapboxSuggestion) => {
+    let displayText = item.name;
+
+    if (item.name !== item.address && item.full_address) {
+      displayText = `${displayText} ${item.full_address}`;
+    }
+
     return (
       <li
-        className="hover:bg-base-300 cursor-pointer w-100 px-3 py-1.5"
+        className="hover:bg-base-300 cursor-pointer px-3 py-1.5 h-9 overflow-hidden"
         key={item.mapbox_id}
         data-value={item.mapbox_id}
         onClick={handleListItemClick}
       >
-        {item.name}
+        {displayText}
       </li>
     );
   };
@@ -120,7 +126,7 @@ export default function HeroSearchForm({
         priority
       />
       <div className="hero h-64 sm:h-96 px-16">
-        <div className="w-full flex-col">
+        <div className="w-full flex-col text-center md:text-start">
           <p
             className={twMerge(
               "flex justify-center text-white text-4xl font-extrabold",
@@ -145,13 +151,13 @@ export default function HeroSearchForm({
             className="flex justify-center md:justify-start"
           >
             <Searchbox
-              textboxClassName="input w-full bg-base-100 rounded-r-none sm:w-96"
-              listClassName="bg-base-100 rounded-box shadow-md w-100 border border-base-300 absolute"
+              textboxClassName="input input-lg w-full bg-base-100 rounded-r-none text-ellipsis sm:w-96"
+              listClassName="bg-base-100 rounded-b-lg shadow-md border border-gray-300 absolute w-[calc(100vw-128px)] text-start mt-[-3px] sm:w-111.75"
               outerWrapperClassName="join justify-center w-full sm:w-96 md:justify-start"
               innerWrapperClassName="join-item w-full sm:w-96"
-              buttonClassName="btn btn-base-100 join-item"
+              buttonClassName="btn btn-lg btn-base-100 border-gray-300 join-item"
               buttonIcon={<FontAwesomeIcon icon={faSearch} />}
-              debounceRate={250}
+              debounceDelay={250}
               placeholderText="Enter an address, neighborhood, city, or ZIP code"
               listItemTemplate={listItemTemplate}
               onButtonClick={handleSearchButtonClick}
