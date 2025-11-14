@@ -10,8 +10,9 @@ import {
 } from "@/formActions/search";
 import Searchbox from "@/components/ui/Searchbox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { twMerge } from "tailwind-merge";
+import { useRouter } from "next/navigation";
 
 type ListItemData = {
   name: string;
@@ -30,6 +31,7 @@ export default function HeroSearchForm({
   );
   const [sessionToken, setSessionToken] = useState<string>("");
   const formRef = useRef(null);
+  const router = useRouter();
 
   const handleListItemClick = (evt: React.MouseEvent<HTMLLIElement>) => {
     const target = evt.currentTarget;
@@ -73,11 +75,11 @@ export default function HeroSearchForm({
     }
   };
 
-  const listItemTemplate = (item: MapboxSuggestion) => {
-    let displayText = item.name;
+  const listItemTemplateFn = (item: MapboxSuggestion) => {
+    let listItemContent = item.name;
 
     if (item.name !== item.address && item.full_address) {
-      displayText = `${displayText} ${item.full_address}`;
+      listItemContent = `${listItemContent} ${item.full_address}`;
     }
 
     return (
@@ -87,12 +89,39 @@ export default function HeroSearchForm({
         data-value={item.mapbox_id}
         onClick={handleListItemClick}
       >
-        {displayText}
+        {listItemContent}
       </li>
     );
   };
 
-  const searchCallback = useCallback(
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          router.push(`/locations?lat=${latitude}&lon=${longitude}&userLocation=true`);
+        },
+
+        (error) => {
+          console.error("Error get user location: ", error);
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by this browser");
+    } 
+  };
+
+  const defaultListItems: React.JSX.Element[] = [
+    <li
+      className="hover:bg-base-300 rounded-lg cursor-pointer px-3 py-1.5 h-9 overflow-hidden"
+      key="current-location"
+      onClick={getUserLocation}
+    >
+      <FontAwesomeIcon icon={faLocationDot} /> Use Current Location
+    </li>,
+  ];
+
+  const searchFn = useCallback(
     async (searchText: string): Promise<MapboxSuggestion[]> => {
       let results: MapboxSuggestion[] = [];
       if (searchText.trim() === "") {
@@ -152,16 +181,17 @@ export default function HeroSearchForm({
           >
             <Searchbox
               textboxClassName="input input-lg w-full bg-base-100 rounded-r-none text-ellipsis sm:w-96"
-              listClassName="bg-base-100 rounded-b-lg shadow-md border border-gray-300 absolute w-[calc(100vw-128px)] text-start mt-[-3px] sm:w-111.75"
+              listClassName="bg-base-100 rounded-lg shadow-md border border-gray-300 absolute w-[calc(100vw-128px)] text-start mt-2 sm:w-111.75"
               outerWrapperClassName="join justify-center w-full sm:w-96 md:justify-start"
               innerWrapperClassName="join-item w-full sm:w-96"
               buttonClassName="btn btn-lg btn-base-100 border-gray-300 join-item"
               buttonIcon={<FontAwesomeIcon icon={faSearch} />}
               debounceDelay={250}
               placeholderText="Enter an address, neighborhood, city, or ZIP code"
-              listItemTemplate={listItemTemplate}
+              defaultListItems={defaultListItems}
+              listItemTemplateFn={listItemTemplateFn}
               onButtonClick={handleSearchButtonClick}
-              searchFn={searchCallback}
+              searchFn={searchFn}
             />
             <input type="hidden" name="sessionToken" value={sessionToken} />
             <input

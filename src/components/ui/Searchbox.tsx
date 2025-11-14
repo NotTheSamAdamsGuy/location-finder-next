@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { useElementHasFocus } from "@/hooks/useElementHasFocus";
 // TODO: add list item keyboard accessibility handling
 // TODO: add default styling
 // TODO: export into a shared components library - longer term
@@ -68,11 +70,16 @@ interface SearchboxProps<T> {
   placeholderText?: string;
 
   /**
+   * List items to display when the search query returns zero results. Optional.
+   */
+  defaultListItems?: React.JSX.Element[];
+
+  /**
    * A function that generates elements for use in the list of search results using the provided item as input. Required.
    * @param {T} item
    * @returns {React.JSX.Element} a <li> element
    */
-  listItemTemplate: (item: T) => React.JSX.Element;
+  listItemTemplateFn: (item: T) => React.JSX.Element;
 
   /**
    * A click event handler for the <button> element.
@@ -100,8 +107,8 @@ export default function Searchbox<T>({
   outerWrapperClassName,
   innerWrapperClassName,
   buttonClassName,
-  // Magnifying glass icon -- License: CC Attribution. Made by geakstr: https://github.com/geakstr/entypo-icons
   buttonIcon = (
+    // Magnifying glass icon -- License: CC Attribution. Made by geakstr: https://github.com/geakstr/entypo-icons
     <svg
       width="20px"
       height="20px"
@@ -113,24 +120,30 @@ export default function Searchbox<T>({
   ),
   debounceDelay = 250,
   placeholderText = "Search",
-  listItemTemplate,
+  defaultListItems = [],
+  listItemTemplateFn,
   onButtonClick,
   searchFn,
 }: SearchboxProps<T>) {
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState<Array<T>>([]);
-  const [showList, setShowList] = useState(false);
+  const [listHoveredOver, setListHoveredOver] = useState(false);
   const debouncedSearchText = useDebounce(searchText, debounceDelay);
+  const inputRef = useRef(null);
+  const inputHasFocus = useElementHasFocus(inputRef.current);
+  const showList = inputHasFocus || listHoveredOver;
+
+  const listItems = searchResults.map((item) => {
+    return listItemTemplateFn(item);
+  });
+
+  const listItemsToDisplay =
+    searchResults.length > 0 ? listItems : defaultListItems;
 
   useEffect(() => {
     const fetchResults = async () => {
       const results = await searchFn(debouncedSearchText);
       setSearchResults(results);
-      if (results.length > 0) {
-        setShowList(true);
-      } else {
-        setShowList(false);
-      }
     };
 
     fetchResults();
@@ -141,10 +154,6 @@ export default function Searchbox<T>({
     setSearchText(searchText);
   };
 
-  const listItems = searchResults.map((item) => {
-    return listItemTemplate(item);
-  });
-
   const handleButtonClick = () => {
     onButtonClick(searchResults[0]);
   };
@@ -153,6 +162,7 @@ export default function Searchbox<T>({
     <div className={outerWrapperClassName}>
       <div className={innerWrapperClassName}>
         <input
+          ref={inputRef}
           id={id}
           name={name}
           autoComplete="off"
@@ -166,8 +176,10 @@ export default function Searchbox<T>({
           role="listbox"
           style={{ display: showList ? "block" : "none" }}
           className={listClassName}
+          onMouseOver={() => setListHoveredOver(true)}
+          onMouseOut={() => setListHoveredOver(false)}
         >
-          {listItems}
+          {listItemsToDisplay}
         </ul>
       </div>
       <button
@@ -182,7 +194,7 @@ export default function Searchbox<T>({
 }
 
 /**
- * Control the frequency at which a value is updated in state, particularly 
+ * Control the frequency at which a value is updated in state, particularly
  * in response to rapidly occurring events like user input or window resizing.
  * @param {T} value the value that is changing quickly
  * @param {number} delay the delay to use, in milliseconds.
