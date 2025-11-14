@@ -15,7 +15,7 @@ test("Select component", () => {
   const option1 = selectEl.children[1] as HTMLOptionElement;
   const option2 = selectEl.children[2] as HTMLOptionElement;
 
-  expect(option0.text).toEqual("Select a value");
+  expect(option0.text).toEqual("Select an option");
   expect(option0.disabled).toEqual(true);
   expect(option1.value).toEqual("key1");
   expect(option1.text).toEqual("value1");
