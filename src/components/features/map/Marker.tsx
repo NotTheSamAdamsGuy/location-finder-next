@@ -1,3 +1,5 @@
+import { faLocationCrosshairs } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef } from "react";
@@ -6,11 +8,13 @@ import { createPortal } from "react-dom";
 type MarkerProps = {
   map: mapboxgl.Map;
   feature: LocationFeature;
+  type?: "feature" | "user"
   onClick: (evt: React.MouseEvent<HTMLDivElement>) => void;
 };
 export default function Marker({
   map,
   feature,
+  type = "feature",
   onClick,
 }: MarkerProps) {
   const { geometry, id } = feature;
@@ -19,7 +23,7 @@ export default function Marker({
 
   const handleMarkerClick = (evt: React.MouseEvent<HTMLDivElement>) => {
     onClick(evt);
-  }
+  };
 
   useEffect(() => {
     if (geometry.type === "Point") {
@@ -38,10 +42,11 @@ export default function Marker({
       {createPortal(
         <div
           onClick={handleMarkerClick}
-          className="h-[41px] w-[27px] cursor-pointer"
+          className={`${type === "feature" ? "cursor-pointer" : ""}`}
           data-id={id}
         >
-          <MarkerPin />
+          {type === "feature" && <MarkerPin />}
+          {type === "user" && <FontAwesomeIcon icon={faLocationCrosshairs} className="fa-2xl" />}
         </div>,
         contentRef.current
       )}

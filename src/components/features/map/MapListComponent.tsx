@@ -89,7 +89,7 @@ export default function MapListComponent() {
     // TODO: take user to detail page; determine if we need to set the selected location or not
   };
 
-  // Load map data
+  // Load map
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
@@ -158,18 +158,46 @@ export default function MapListComponent() {
         sort: sort,
       };
       const locations = await getNearbyLocations(getLocationsParams);
+
+      // add the user's location if prompted
+      if (searchParams.get("userLocation") === "true") {
+        const userLocation: LocationFeature = {
+          id: "user-location",
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [
+              parseFloat(searchParams.get("lon")!),
+              parseFloat(searchParams.get("lat")!)
+            ],
+          },
+          properties: {
+            type: "user-location",
+          },
+        };
+
+        locations.features.push(userLocation);
+      }
+
       dispatch({ type: "LOAD_LOCATIONS", payload: locations });
     }
     fetchLocationsData();
-  }, [state.coordinates.latitude, state.coordinates.longitude, state.zoom]);
+  }, [
+    state.coordinates.latitude,
+    state.coordinates.longitude,
+    state.zoom,
+    searchParams,
+  ]);
 
-  const locationCards = state.featureCollection.features.map((feature) => (
-    <FeatureCard
-      key={`card-${feature.id}`}
-      feature={feature as LocationFeature}
-      onClick={handleFeatureCardClick}
-    />
-  ));
+  const locationCards = state.featureCollection.features
+    .filter((feature) => feature.properties?.type !== "user-location")
+    .map((feature) => (
+      <FeatureCard
+        key={`card-${feature.id}`}
+        feature={feature as LocationFeature}
+        onClick={handleFeatureCardClick}
+      />
+    ));
 
   const handleMarkerClick = (evt: React.MouseEvent<HTMLDivElement>) => {
     const id = evt.currentTarget.dataset["id"];
@@ -217,6 +245,7 @@ export default function MapListComponent() {
                 key={`marker-${feature.id}`}
                 map={mapRef.current!}
                 feature={feature as LocationFeature}
+                type={feature.properties?.type === "user-location" ? "user" : "feature"}
                 onClick={handleMarkerClick}
               />
             );
