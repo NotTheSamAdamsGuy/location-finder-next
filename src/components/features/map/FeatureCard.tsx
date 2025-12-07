@@ -1,5 +1,6 @@
 import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
 import { twMerge } from "tailwind-merge";
+import FeatureCardImage from "./FeatureCardImage";
 
 type FeatureCardProps = {
   feature: LocationFeature;
@@ -24,15 +25,12 @@ export default function FeatureCard({ feature, onClick }: FeatureCardProps) {
       data-id={feature.id}
     >
       <figure className="h-36">
-        <img
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          alt={name}
-        />
+        <FeatureCardImage feature={feature} />
       </figure>
       <div className="card-body">
         <h2 className="card-title">{name}</h2>
         <p>
-          {address}, {city}, {state.abbreviation} {postalCode}
+          {address}, {city}, {state?.abbreviation} {postalCode}
         </p>
       </div>
     </div>

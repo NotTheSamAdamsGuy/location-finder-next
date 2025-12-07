@@ -3,6 +3,7 @@ import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import PopupImage from "./PopupImage";
 
 type PopupProps = {
   map: mapboxgl.Map;
@@ -15,7 +16,7 @@ export default function Popup({ map, activeFeature }: PopupProps) {
   // a ref for an element to hold the popup's content
   const contentRef = useRef(document.createElement("div"));
 
-  const fullAddress = `${activeFeature?.properties.address}, ${activeFeature?.properties.city}, ${activeFeature?.properties.state.abbreviation} ${activeFeature?.properties.postalCode}`;
+  const fullAddress = `${activeFeature?.properties.address}, ${activeFeature?.properties.city}, ${activeFeature?.properties.state?.abbreviation} ${activeFeature?.properties.postalCode}`;
 
   // instantiate the popup on mount, remove it on unmount
   useEffect(() => {
@@ -50,10 +51,7 @@ export default function Popup({ map, activeFeature }: PopupProps) {
       {createPortal(
         <div className="portal-content card">
           <figure className="h-36 md:h-auto">
-            <img
-              src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-              alt={activeFeature?.properties.name}
-            />
+            <PopupImage feature={activeFeature} />
           </figure>
           <div className="card-body bg-base-100 rounded-b-lg">
             <h2 className="card-title">{activeFeature?.properties.name}</h2>

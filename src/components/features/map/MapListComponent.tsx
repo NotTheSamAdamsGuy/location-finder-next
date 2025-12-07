@@ -168,7 +168,7 @@ export default function MapListComponent() {
             type: "Point",
             coordinates: [
               parseFloat(searchParams.get("lon")!),
-              parseFloat(searchParams.get("lat")!)
+              parseFloat(searchParams.get("lat")!),
             ],
           },
           properties: {
@@ -245,7 +245,11 @@ export default function MapListComponent() {
                 key={`marker-${feature.id}`}
                 map={mapRef.current!}
                 feature={feature as LocationFeature}
-                type={feature.properties?.type === "user-location" ? "user" : "feature"}
+                type={
+                  feature.properties?.type === "user-location"
+                    ? "user"
+                    : "feature"
+                }
                 onClick={handleMarkerClick}
               />
             );
@@ -265,7 +269,7 @@ export default function MapListComponent() {
       >
         <div
           className={twMerge(
-            "flex flex-col gap-2",
+            "flex flex-col gap-2 w-full",
             "sm:flex-row sm:justify-between sm:flex-wrap sm:gap-4 sm-h-[100px]",
             "md:flex-col md:flex-nowrap md:h-0"
           )}
