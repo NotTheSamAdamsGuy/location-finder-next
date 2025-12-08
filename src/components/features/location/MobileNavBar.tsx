@@ -14,7 +14,7 @@ export default function MobileNavBar() {
   return (
     <div className="absolute top-0 p-3 md:hidden">
       <button
-        className="flex justify-center items-center w-12 h-12 rounded-full bg-red-500 opacity-75 cursor-pointer"
+        className="flex justify-center items-center w-12 h-12 rounded-full bg-white opacity-75 cursor-pointer"
         onClick={handleClick}
       >
         <FontAwesomeIcon icon={faAngleLeft} className="fa-xl" />
