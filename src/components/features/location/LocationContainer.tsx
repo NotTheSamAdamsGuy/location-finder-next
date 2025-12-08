@@ -22,6 +22,7 @@ export default function LocationContainer({ location }: Props) {
             width={768}
             height={412}
             className="w-full h-72 object-cover object-center"
+            priority
           />
         );
       })
