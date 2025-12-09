@@ -1,12 +1,12 @@
 "use client";
 
-import DOMPurify from "dompurify";
 import { getImageUrl } from "@/lib/utils/imageUtils";
 import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
 import Image from "next/image";
 import MobileNavBar from "./MobileNavBar";
 import { useRef } from "react";
 import { useIntersection } from "@/hooks/useIntersection";
+import TagsContainer from "./TagsContainer";
 
 interface Props {
   location: LocationFeature;
@@ -15,9 +15,8 @@ interface Props {
 export default function LocationContainer({ location }: Props) {
   const { name, address, city, state, postalCode, description } =
     location.properties;
-  // the sanitize stuff is throwing errors - need to figure out why or find another approach
-  // const safeDescription = DOMPurify.sanitize(description as string, { USE_PROFILES: { html: true } });
-  const locationImages: React.ReactNode[] = location?.properties?.images
+  
+    const locationImages: React.ReactNode[] = location?.properties?.images
     ? location.properties.images.map((imageData) =>   {
         const imageUrl = getImageUrl(imageData);
         const imageAlt = imageData.description ?? "location image";
@@ -51,8 +50,8 @@ export default function LocationContainer({ location }: Props) {
         </div>
       </div>
       <div className="p-3">
-        <h2 className="text-xl font-bold">About this location</h2>
-        {/* <div dangerouslySetInnerHTML={{ __html: safeDescription }} /> */}
+        <h2 className="text-xl font-bold mb-3">About this location</h2>
+        <TagsContainer location={location} className="mb-3" />
         <div>{description}</div>
       </div>
     </div>
