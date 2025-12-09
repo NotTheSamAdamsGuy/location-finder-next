@@ -1,8 +1,6 @@
 "use client";
 
 import { UserProfile } from "@notthesamadamsguy/location-finder-types";
-import { usePathname } from "next/navigation";
-import { twMerge } from "tailwind-merge";
 import LogoutLink from "./auth/LogoutLink";
 import Link from "next/link";
 
@@ -21,15 +19,9 @@ interface Props {
   siteName: string;
 }
 export default function Navbar({ user, siteName }: Props) {
-  const pathname = usePathname();
-  const hideNavbar = pathname.includes("locationdetails") ? true : false;
-
   return (
     <div
-      className={twMerge(
-        "navbar bg-base-100 shadow-sm",
-        hideNavbar ? "hidden md:flex" : ""
-      )}
+      className="navbar bg-base-100 shadow-sm"
     >
       <div className="navbar-start">
         <div className="dropdown">

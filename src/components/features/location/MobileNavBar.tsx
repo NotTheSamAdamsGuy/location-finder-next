@@ -3,8 +3,12 @@
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
+import { twMerge } from "tailwind-merge";
 
-export default function MobileNavBar() {
+interface Props {
+  className?: string;
+}
+export default function MobileNavBar({className}: Props) {
   const router = useRouter();
 
   const handleClick = () => {
@@ -12,13 +16,15 @@ export default function MobileNavBar() {
   };
 
   return (
-    <div className="absolute top-0 p-3 md:hidden">
-      <button
-        className="flex justify-center items-center w-12 h-12 rounded-full bg-white opacity-75 cursor-pointer"
-        onClick={handleClick}
-      >
-        <FontAwesomeIcon icon={faAngleLeft} className="fa-xl" />
-      </button>
+    <div className={twMerge("sticky top-0 md:hidden", className ? className : "")}>
+      <div className="p-3">
+        <button
+          className="flex justify-center items-center w-12 h-12 rounded-full bg-white opacity-75 cursor-pointer"
+          onClick={handleClick}
+        >
+          <FontAwesomeIcon icon={faAngleLeft} className="fa-xl" />
+        </button>
+      </div>
     </div>
   );
 }
