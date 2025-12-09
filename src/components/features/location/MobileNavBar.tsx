@@ -19,7 +19,7 @@ export default function MobileNavBar({className}: Props) {
     <div className={twMerge("sticky top-0 md:hidden", className ? className : "")}>
       <div className="p-3">
         <button
-          className="flex justify-center items-center w-12 h-12 rounded-full bg-white opacity-75 cursor-pointer"
+          className="flex justify-center items-center w-12 h-12 rounded-full bg-base-100 opacity-75 cursor-pointer"
           onClick={handleClick}
         >
           <FontAwesomeIcon icon={faAngleLeft} className="fa-xl" />
