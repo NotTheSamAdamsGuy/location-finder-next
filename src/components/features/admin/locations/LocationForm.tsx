@@ -46,7 +46,7 @@ export default function LocationForm({
     formState?.fields.city?.toString() || location?.properties.city || "";
   const stateAbbreviation =
     formState?.fields.stateAbbreviation?.toString() ||
-    location?.properties.state.abbreviation ||
+    location?.properties.state?.abbreviation ||
     "";
   const postalCode =
     formState?.fields.postalCode?.toString() ||
@@ -103,11 +103,10 @@ export default function LocationForm({
         <label htmlFor="description" className="label flex">
           Description
         </label>
-        <input
+        <textarea
           id="description"
           name="description"
-          type="text"
-          className="input input-lg flex w-full"
+          className="textarea h-24 input-lg flex w-full"
           autoComplete="off"
           defaultValue={description}
         />
