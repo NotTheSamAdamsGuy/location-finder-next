@@ -90,7 +90,7 @@ export async function login(formState: LoginFormState, formData: FormData) {
 
   await createSession(token);
 
-  redirect("/");
+  redirect(`/${formData.get("redirectPath")}`);
 }
 
 /**
