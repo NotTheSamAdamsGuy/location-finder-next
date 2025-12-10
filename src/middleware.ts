@@ -19,10 +19,11 @@ export default async function middleware(req: NextRequest) {
   const session = await decrypt(token);
   
   if (isProtectedRoute && !session?.username) {
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
+    const redirectPath = path.startsWith("/") ? path.substring(1) : path;
+    const redirectString = redirectPath !== "" ? `?redirect=${redirectPath}` : "";
+    return NextResponse.redirect(new URL(`/login${redirectString}`, req.nextUrl));
   }
 
-  // TODO: figure out how to redirect the user to the originally requested page
   if (
     isPublicRoute &&
     session?.username &&
@@ -36,5 +37,5 @@ export default async function middleware(req: NextRequest) {
 
 // Routes Middleware should not run on
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*|favicon.ico|login)"],
 };

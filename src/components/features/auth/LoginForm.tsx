@@ -3,9 +3,12 @@
 import { useActionState } from "react";
 
 import { login } from "@/formActions/auth";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginForm() {
   const [state, action, pending] = useActionState(login, undefined);
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect") ?? "";
 
   return (
     <form
@@ -13,6 +16,7 @@ export default function LoginForm() {
       className="flex flex-col items-center md:w-1/2 mx-auto px-4 md:px-0"
     >
       <input type="hidden" name="name" value="name" />
+      <input type="hidden" name="redirectPath" value={redirectPath} />
 
       <div className="flex flex-col mt-8">
         <label className="label flex" htmlFor="username">
