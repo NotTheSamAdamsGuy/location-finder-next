@@ -27,10 +27,47 @@ const LoginFormSchema = z.object({
  * @param password a password string
  * @returns a JWT token string if the user was authenticated, otherwise throws an error
  */
+// const authenticateUser = async (
+//   username: string,
+//   password: string
+// ): Promise<string | null> => {
+//   const postData = {
+//     username: username,
+//     password: password,
+//   };
+
+//   const requestOptions = {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(postData),
+//   };
+
+//   try {
+//     const response = await fetch(
+//       `${process.env.API_HOST}:${process.env.API_PORT}/authentication/login`,
+//       requestOptions
+//     );
+//     const data = await response.json();
+//     const token = data.token;
+//     return token;
+//   } catch (err) {
+//     // TODO: make this work properly - it isn't writing to the console - do we need to return something?
+//     console.log(err);
+//     throw err;
+//   }
+// };
+
+interface Tokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
 const authenticateUser = async (
   username: string,
   password: string
-): Promise<string | null> => {
+): Promise<Tokens | null> => {
   const postData = {
     username: username,
     password: password,
@@ -49,9 +86,9 @@ const authenticateUser = async (
       `${process.env.API_HOST}:${process.env.API_PORT}/authentication/login`,
       requestOptions
     );
-    const data = await response.json();
-    const token = data.token;
-    return token;
+    return (await response.json()) as Tokens;
+    // const token = data.token;
+    // return data.tokens;
   } catch (err) {
     // TODO: make this work properly - it isn't writing to the console - do we need to return something?
     console.log(err);
@@ -80,15 +117,25 @@ export async function login(formState: LoginFormState, formData: FormData) {
   }
 
   const { username, password } = validatedFields.data;
-  const token = await authenticateUser(username, password);
+  // const token = await authenticateUser(username, password);
 
-  if (!token) {
+  // if (!token) {
+  //   return {
+  //     message: "Please provide a valid username and password.",
+  //   };
+  // }
+
+  // await createSession(token);
+
+  const tokens = await authenticateUser(username, password);
+
+  if (!tokens) {
     return {
-      message: "Please provide a valid username and password.",
+      message: "Pleasse provide a valid username and password.",
     };
   }
 
-  await createSession(token);
+  await createSession(tokens);
 
   redirect(`/${formData.get("redirectPath")}`);
 }
@@ -98,7 +145,37 @@ export async function login(formState: LoginFormState, formData: FormData) {
  */
 export async function logout() {
   const cookieStore = await cookies();
-  cookieStore.delete("token");
+  // cookieStore.delete("token");
+  cookieStore.delete("accessToken");
+  cookieStore.delete("refreshToken");
 
   redirect("/login");
+}
+
+export async function refreshTokens(refreshToken: string) {
+  const postData = {
+    refreshToken: refreshToken
+  };
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(postData),
+  };
+
+  try {
+    const response = await fetch(
+      `${process.env.API_HOST}:${process.env.API_PORT}/authentication/refreshTokens`,
+      requestOptions
+    );
+    // return (await response.json()) as Tokens;
+    const tokens = (await response.json()) as Tokens;
+    await createSession(tokens);
+  } catch (err) {
+    // TODO: make this work properly - it isn't writing to the console - do we need to return something?
+    console.log(err);
+    throw err;
+  }
 }

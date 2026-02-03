@@ -22,51 +22,79 @@ export async function decrypt(session: string | undefined = "") {
   return {};
 }
 
-export async function createSession(token: string) {
-  const tokenData = await decrypt(token);
-  const expiresAt = new Date((tokenData!.exp as number) * 1000);
+// export async function createSession(token: string) {
+//   const tokenData = await decrypt(token);
+//   const expiresAt = new Date((tokenData!.exp as number) * 1000);
+//   const cookieStore = await cookies();
+
+//   cookieStore.set("token", token, {
+//     httpOnly: true,
+//     secure: false,
+//     expires: expiresAt,
+//     sameSite: "lax",
+//     path: "/",
+//   });
+// }
+
+interface Tokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export async function createSession(tokens: Tokens) {
+  const { accessToken, refreshToken } = tokens;
+  const accessTokenData = await decrypt(accessToken);
+  const refreshTokenData = await decrypt(refreshToken);
   const cookieStore = await cookies();
 
-  cookieStore.set("token", token, {
+  cookieStore.set("accessToken", accessToken, {
     httpOnly: true,
     secure: false,
-    expires: expiresAt,
+    expires: new Date((accessTokenData!.exp as number) * 1000),
+    sameSite: "lax",
+    path: "/",
+  });
+
+  cookieStore.set("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: false,
+    expires: new Date((refreshTokenData!.exp as number) * 1000),
     sameSite: "lax",
     path: "/",
   });
 }
 
-export async function getUser(token: string) {
-  const session: JWTPayload = await decrypt(token);
+export async function getUser(accessToken: string) {
+  const session: JWTPayload = await decrypt(accessToken);
   const user: User = {
     username: "",
     role: "USER",
     firstName: "",
     lastName: "",
     password: "",
-    lastLoginTimestamp: 0
-  }
+    lastLoginTimestamp: 0,
+  };
 
   if (session) {
     user.username = session.username as string;
     user.role = session.role as "USER" | "ADMIN";
-  } 
+  }
 
   return user;
 }
 
-export async function getRole(token: string) {
-  const session = await decrypt(token);
-  return session?.role;
-}
+// export async function getRole(token: string) {
+//   const session = await decrypt(token);
+//   return session?.role;
+// }
 
 export const verifySession = cache(async () => {
-  const cookie = (await cookies()).get("token")?.value;
+  const cookie = (await cookies()).get("accessToken")?.value;
   const session = await decrypt(cookie);
 
-  if (!session?.username) {
+  if (!session?.sub) {
     redirect("/login");
   }
 
-  return { isAuth: true, username: session.username, role: session.role};
+  return { isAuth: true, username: session.username, role: session.role };
 });
