@@ -5,7 +5,7 @@ import MobileNavBar from "./MobileNavBar";
 import { useRef } from "react";
 import { useIntersection } from "@/hooks/useIntersection";
 import TagsContainer from "./TagsContainer";
-import LocationImageCarousel from "./LocationImageCarousel";
+import LocationImageContainer from "./LocationImageContainer";
 
 interface Props {
   location: LocationFeature;
@@ -24,7 +24,7 @@ export default function LocationContainer({ location }: Props) {
         className={`w-full h-0 ${locationImagesAreVisible ? "" : "bg-base-100 h-18 shadow-sm"}`}
       />
       <div ref={locationImagesRef} className={`${locationImagesAreVisible ? "mt-0" : "-mt-18"}`}>
-        <LocationImageCarousel images={location.properties.images || []} />
+        <LocationImageContainer images={location.properties.images || []} />
       </div>
       <div className="p-3">
         <h1 className="text-3xl font-bold">{name}</h1>
