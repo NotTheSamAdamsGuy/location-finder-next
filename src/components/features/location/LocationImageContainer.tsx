@@ -1,8 +1,11 @@
-import { JSX } from "react";
+"use client"
+
+import { JSX, useState } from "react";
 import Image from "next/image";
 import { LocationImage } from "@notthesamadamsguy/location-finder-types";
 
 import { getImageUrl } from "@/lib/utils/imageUtils";
+import LocationImageDialog from "./LocationImageDialog";
 
 interface Props {
   images: LocationImage[];
@@ -16,6 +19,15 @@ interface Props {
  * @returns a JSX.Element object
  */
 export default function LocationImageCarousel({ images }: Props) {
+  const [showDialog, setShowDialog] = useState(false);
+
+  const handleImageClick = () => {
+    setShowDialog(true);
+  };
+
+  const handleCloseButtonClick = () => {
+    setShowDialog(false);
+  };
   const placeholderLocationImage = () => {
     return {
       filename: "placeholder.jpg",
@@ -58,6 +70,7 @@ export default function LocationImageCarousel({ images }: Props) {
           height={412}
           className="w-full h-72 object-cover object-center"
           priority
+          onClick={handleImageClick}
         />
       </div>
     );
@@ -131,6 +144,11 @@ export default function LocationImageCarousel({ images }: Props) {
           {gridImages()}
         </div>
       </div>
+      <LocationImageDialog
+        showDialog={showDialog}
+        images={images}
+        onCloseButtonClick={handleCloseButtonClick}
+      />
     </>
   );
 }
