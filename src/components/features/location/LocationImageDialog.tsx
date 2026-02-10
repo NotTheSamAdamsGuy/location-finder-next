@@ -31,7 +31,7 @@ export default function LocationImageDialog({
         alt={image?.description || "location image"}
         width={768}
         height={412}
-        className="w-full h-72 object-cover object-center"
+        className="w-full h-72 object-cover object-center mb-2"
       />
     )
   });
