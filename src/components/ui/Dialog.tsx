@@ -5,21 +5,25 @@ import { twMerge } from "tailwind-merge";
 
 interface Props {
   showDialog: boolean;
+  id: string;
   closeButtonLocation?: string;
   closeButtonIcon?: IconDefinition;
   closeButtonText?: string;
   children: React.ReactNode;
   className?: string;
+  scrollTo?: number;
   onCloseClick: (event?: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export default function Dialog({
   showDialog,
+  id = "replace-me",
   closeButtonLocation = "right",
   closeButtonIcon = faXmark,
   closeButtonText = "",
   children,
   className,
+  scrollTo,
   onCloseClick,
 }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -32,8 +36,13 @@ export default function Dialog({
       dialogRef.current?.close();
     } else if (!dialogRef.current?.open && showDialog) {
       dialogRef.current?.showModal();
+      
+      // scroll to the provided height
+      if (scrollTo !== undefined) {
+        dialogRef.current?.scrollTo({ top: scrollTo });
+      }
     }
-  }, [showDialog]);
+  }, [showDialog, scrollTo]);
 
   /**
    * Connect the escape keypress event to the close dialog handler
@@ -58,7 +67,7 @@ export default function Dialog({
 
   return (
     <dialog
-      id="location-images-dialog"
+      id={id}
       className={twMerge(
         "fixed inset-0 size-auto max-h-none max-w-none",
         "overflow-y-auto open:animate-fade-in open:backdrop:animate-fade-in",

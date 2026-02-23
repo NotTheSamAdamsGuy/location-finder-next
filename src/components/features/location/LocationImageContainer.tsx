@@ -20,14 +20,24 @@ interface Props {
  */
 export default function LocationImageCarousel({ images }: Props) {
   const [showDialog, setShowDialog] = useState(false);
+  const [scrollTo, setScrollTo] = useState(0);
 
-  const handleImageClick = () => {
+  /**
+   * Show the dialog and scroll the selected image to the top of the screen.
+   * @param {number} selectedImageIndex the index of the image within the set of images
+   */
+  const handleImageClick = (selectedImageIndex: number) => {
     setShowDialog(true);
+
+    const imageHeight = 288 + 8; // 288px + 8px margin
+    const scrollTo = imageHeight * selectedImageIndex;
+    setScrollTo(scrollTo);
   };
 
   const handleCloseButtonClick = () => {
     setShowDialog(false);
   };
+  
   const placeholderLocationImage = () => {
     return {
       filename: "placeholder.jpg",
@@ -70,7 +80,7 @@ export default function LocationImageCarousel({ images }: Props) {
           height={412}
           className="w-full h-72 object-cover object-center"
           priority
-          onClick={handleImageClick}
+          onClick={() => handleImageClick(index)}
         />
       </div>
     );
@@ -147,6 +157,7 @@ export default function LocationImageCarousel({ images }: Props) {
       <LocationImageDialog
         showDialog={showDialog}
         images={images}
+        scrollTo={scrollTo}
         onCloseButtonClick={handleCloseButtonClick}
       />
     </>

@@ -6,13 +6,15 @@ import { getImageUrl } from "@/lib/utils/imageUtils";
 
 interface Props {
   showDialog: boolean;
-  images: LocationImage[]
+  images: LocationImage[];
+  scrollTo: number;
   onCloseButtonClick: () => void;
 }
 
 export default function LocationImageDialog({
   showDialog,
   images,
+  scrollTo = 0,
   onCloseButtonClick,
 }: Props) {
   const handleCloseClick = () => {
@@ -39,9 +41,11 @@ export default function LocationImageDialog({
   return (
     <Dialog
       showDialog={showDialog}
+      id="location-images-dialog"
       closeButtonLocation="left"
       closeButtonIcon={faAngleLeft}
       closeButtonText="Return to location"
+      scrollTo={scrollTo}
       onCloseClick={handleCloseClick}
     >
       {dialogImages}
