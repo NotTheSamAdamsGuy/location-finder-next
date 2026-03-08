@@ -1,8 +1,13 @@
-import { JSX } from "react";
+"use client";
+
+import { JSX, useState } from "react";
 import Image from "next/image";
 import { LocationImage } from "@notthesamadamsguy/location-finder-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImages } from "@fortawesome/free-solid-svg-icons";
 
 import { getImageUrl } from "@/lib/utils/imageUtils";
+import LocationImageDialog from "./LocationImageDialog";
 
 interface Props {
   images: LocationImage[];
@@ -16,6 +21,36 @@ interface Props {
  * @returns a JSX.Element object
  */
 export default function LocationImageCarousel({ images }: Props) {
+  const [showDialog, setShowDialog] = useState(false);
+  const [scrollTo, setScrollTo] = useState(0);
+
+  /**
+   * Show the dialog and scroll the selected image to the top of the screen.
+   * @param {number} selectedImageIndex the index of the image within the set of images
+   */
+  const handleImageClick = (
+    selectedImageIndex: number,
+    imageHeight: number = 288,
+  ) => {
+    setShowDialog(true);
+
+    imageHeight = imageHeight + 8; // imageHeight + 8px margin
+    const scrollTo = imageHeight * selectedImageIndex;
+    setScrollTo(scrollTo);
+  };
+
+  const handleGridImageClick = (selectedImageIndex: number) => {
+    handleImageClick(selectedImageIndex, 396);
+  };
+
+  const handleShowAllButtonClick = () => {
+    handleImageClick(0);
+  };
+
+  const handleCloseButtonClick = () => {
+    setShowDialog(false);
+  };
+
   const placeholderLocationImage = () => {
     return {
       filename: "placeholder.jpg",
@@ -44,6 +79,11 @@ export default function LocationImageCarousel({ images }: Props) {
     imagesForGrid.push(advertisementImage());
   }
 
+  const imageConfig = {
+    height: 412, // 412 px
+    width: 768, // 768 px
+  };
+
   const carouselItems = images.slice().map((image, index) => {
     return (
       <div className="carousel-item w-full" key={`item${index + 1}`}>
@@ -54,17 +94,18 @@ export default function LocationImageCarousel({ images }: Props) {
               : "/placeholder.jpg"
           }
           alt={image?.description || "location image"}
-          width={768}
-          height={412}
+          width={imageConfig.width}
+          height={imageConfig.height}
           className="w-full h-72 object-cover object-center"
           priority
+          onClick={() => handleImageClick(index)}
         />
       </div>
     );
   });
 
   const gridImage = (index: number) => {
-    let className = "h-full object-cover object-center ";
+    let className = "h-full object-cover object-center cursor-pointer ";
 
     if (index === 0) {
       className += "rounded-l-2xl";
@@ -90,10 +131,11 @@ export default function LocationImageCarousel({ images }: Props) {
             : "/placeholder.jpg"
         }
         alt={imagesForGrid[index].description || "location image"}
-        width={768}
-        height={412}
+        width={imageConfig.width}
+        height={imageConfig.height}
         className={className}
         priority={index === 0}
+        onClick={() => handleGridImageClick(index)}
       />
     );
   };
@@ -123,14 +165,30 @@ export default function LocationImageCarousel({ images }: Props) {
     return gridImages;
   };
 
+  const buttonText =
+    images.length === 1 ? "Show image" : `Show all ${images.length} images`;
+
   return (
     <>
       <div className="carousel w-full md:hidden">{carouselItems}</div>
-      <div className="hidden md:block w-full">
-        <div className="grid grid-cols-5 grid-rows-2 gap-2 h-96 p-3 grid-flow-col lg:grid-cols-9 xl:grid-cols-11">
+      <div className="hidden relative w-full p-3 md:block">
+        <div className="grid grid-cols-5 grid-rows-2 gap-2 h-96 grid-flow-col lg:grid-cols-9 xl:grid-cols-11">
           {gridImages()}
         </div>
+        <button
+          className="absolute bottom-8 right-8 btn btn-primary"
+          onClick={handleShowAllButtonClick}
+        >
+          <FontAwesomeIcon icon={faImages} />
+          {buttonText}
+        </button>
       </div>
+      <LocationImageDialog
+        showDialog={showDialog}
+        images={images}
+        scrollTo={scrollTo}
+        onCloseButtonClick={handleCloseButtonClick}
+      />
     </>
   );
 }
