@@ -145,6 +145,7 @@ export default function FileUploader({
         onChange={handleChange}
         ref={fileInputRef}
         className="hidden"
+        accept="image/*"
       />
       <FileCardList items={fileCardInputs} onRemoveFileCard={removeFile} />
     </div>
