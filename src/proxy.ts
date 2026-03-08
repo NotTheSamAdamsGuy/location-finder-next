@@ -7,7 +7,7 @@ import { decrypt } from "@/lib/session";
 const protectedRoutes = ["/", "/admin", "/admin/locations", "/admin/locations/add"];
 const publicRoutes = ["/login"];
 
-export default async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   // TODO: make this work - commenting out for nowadd path for use in building breadcrumbs
   // const headers = new Headers(req.headers);
   // headers.set("x-current-path", req.nextUrl.pathname);
