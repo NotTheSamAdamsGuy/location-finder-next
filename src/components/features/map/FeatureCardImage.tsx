@@ -1,6 +1,7 @@
-import { getImageUrlsFromFeature } from "@/lib/utils/imageUtils";
 import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
 import Image from "next/image";
+
+import { getImageUrlsFromFeature } from "@/lib/utils/imageUtils";
 
 interface Props {
   feature: LocationFeature;

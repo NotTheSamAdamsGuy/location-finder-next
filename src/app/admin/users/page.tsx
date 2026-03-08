@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 
-import { getAllUsernames } from "@/lib/api/users";
-import { verifySession } from "@/lib/session";
 import Breadcrumbs from "@/components/features/admin/Breadcrumbs";
 import UsersTable from "@/components/features/admin/users/UsersTable";
+import { getAllUsernames } from "@/lib/api/users";
+import { verifySession } from "@/lib/session";
 
 
 export default async function UsersAdminPage() {

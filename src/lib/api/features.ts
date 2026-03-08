@@ -1,7 +1,7 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { LocationFeatureCollection } from "@notthesamadamsguy/location-finder-types";
+import { cookies } from "next/headers";
 
 export type GetNearbyFeaturesProps = {
   latitude: number;

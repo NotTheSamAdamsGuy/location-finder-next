@@ -1,11 +1,13 @@
 "use client";
 
 import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
-import MobileNavBar from "./MobileNavBar";
 import { useRef } from "react";
+
 import { useIntersection } from "@/hooks/useIntersection";
-import TagsContainer from "./TagsContainer";
+
 import LocationImageContainer from "./LocationImageContainer";
+import MobileNavBar from "./MobileNavBar";
+import TagsContainer from "./TagsContainer";
 
 interface Props {
   location: LocationFeature;

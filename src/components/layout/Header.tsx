@@ -1,7 +1,8 @@
-import { cookies } from "next/headers";
 import { UserProfile } from "@notthesamadamsguy/location-finder-types";
+import { cookies } from "next/headers";
 
 import { getUser } from "@/lib/session";
+
 import Navbar from "../features/Navbar";
 
 export default async function Header() {

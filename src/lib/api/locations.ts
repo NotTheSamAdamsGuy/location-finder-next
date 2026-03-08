@@ -1,10 +1,10 @@
 "use server";
 
-import { cookies } from "next/headers";
 import {
   LocationFeature,
   LocationFeatureCollection,
 } from "@notthesamadamsguy/location-finder-types";
+import { cookies } from "next/headers";
 
 export const getAllLocations = async (): Promise<LocationFeatureCollection> => {
   const token = (await cookies()).get("token")?.value;

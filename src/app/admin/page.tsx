@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 
-import { verifySession } from "@/lib/session";
-import PageHeader from "@/components/features/admin/PageHeader";
 import Breadcrumbs from "@/components/features/admin/Breadcrumbs";
+import PageHeader from "@/components/features/admin/PageHeader";
+import { verifySession } from "@/lib/session";
 
 export default async function AdminPage() {
   const session = await verifySession();

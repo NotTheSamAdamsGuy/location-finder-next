@@ -1,7 +1,8 @@
-import Image from "next/image";
-import Dialog from "@/components/ui/Dialog";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { LocationImage } from "@notthesamadamsguy/location-finder-types";
+import Image from "next/image";
+
+import Dialog from "@/components/ui/Dialog";
 import { getImageUrl } from "@/lib/utils/imageUtils";
 
 interface Props {

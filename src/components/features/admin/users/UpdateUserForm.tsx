@@ -1,10 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
 import { UserProfile } from "@notthesamadamsguy/location-finder-types";
+import { useActionState } from "react";
 
-import { updateUser } from "@/formActions/admin/users";
 import Select from "@/components/ui/Select";
+import { updateUser } from "@/formActions/admin/users";
 import { USER_ROLES } from "@/lib/constants";
 
 type UserFormProps = {

@@ -1,8 +1,8 @@
 "use server";
 
+import { MapSearchReply } from "@notthesamadamsguy/location-finder-types";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { MapSearchReply } from "@notthesamadamsguy/location-finder-types";
 
 type LocationSearchFormState =
   | {

@@ -1,11 +1,11 @@
 import { forbidden, notFound } from "next/navigation";
 
+import Breadcrumbs from "@/components/features/admin/Breadcrumbs";
 import LocationForm from "@/components/features/admin/locations/LocationForm";
 import PageHeader from "@/components/features/admin/PageHeader";
-import { verifySession } from "@/lib/session";
 import { getLocation } from "@/lib/api/locations";
-import Breadcrumbs from "@/components/features/admin/Breadcrumbs";
 import { getAllTags } from "@/lib/api/tags";
+import { verifySession } from "@/lib/session";
 
 export default async function UpdateLocationAdminPage({
   params,

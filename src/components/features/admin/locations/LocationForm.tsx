@@ -1,15 +1,15 @@
 "use client";
 
-import { useActionState } from "react";
 import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
+import { useActionState } from "react";
 
-import { addLocation, updateLocation } from "@/formActions/admin/locations";
-import { US_STATES } from "@/lib/constants";
 import FileUploader, {
   FileUploaderItem,
 } from "@/components/features/admin/FileUploader";
 import Multiselect from "@/components/ui/Multiselect";
 import Select from "@/components/ui/Select";
+import { addLocation, updateLocation } from "@/formActions/admin/locations";
+import { US_STATES } from "@/lib/constants";
 
 type LocationFormProps = {
   tags?: string[];

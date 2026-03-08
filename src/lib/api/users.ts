@@ -1,7 +1,7 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { UserProfile } from "@notthesamadamsguy/location-finder-types";
+import { cookies } from "next/headers";
 
 export const getAllUsernames = async (): Promise<string[]> => {
   const token = (await cookies()).get("token")?.value;

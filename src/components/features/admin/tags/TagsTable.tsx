@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 
-import { TableData } from "@/types/tables.types";
-import { removeTag } from "@/formActions/admin/tags";
-import { ClientTable } from "@/components/ui/ClientTable";
 import TableActionControls from "@/components/features/admin//TableActionControls";
+import { ClientTable } from "@/components/ui/ClientTable";
+import { removeTag } from "@/formActions/admin/tags";
+import { TableData } from "@/types/tables.types";
 
 export default function TagsTable({ data }: { data: string[] }) {
   const [tags, setTags] = useState<string[]>(data);

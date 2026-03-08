@@ -1,10 +1,11 @@
-import { Feature, Point } from "geojson";
 import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
+import { Feature, Point } from "geojson";
 import mapboxgl from "mapbox-gl";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+
 import PopupImage from "./PopupImage";
-import Link from "next/link";
 
 type PopupProps = {
   map: mapboxgl.Map;

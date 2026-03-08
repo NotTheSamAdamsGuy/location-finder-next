@@ -1,7 +1,8 @@
 "use client";
 
-import { TableData } from "@/types/tables.types";
 import { useState } from "react";
+
+import { TableData } from "@/types/tables.types";
 
 type ClientTableProps = {
   data: TableData;

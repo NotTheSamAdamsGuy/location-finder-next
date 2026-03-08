@@ -1,6 +1,7 @@
+import { notFound } from "next/navigation";
+
 import LocationContainer from "@/components/features/location/LocationContainer";
 import { getLocation } from "@/lib/api/locations";
-import { notFound } from "next/navigation";
 
 export default async function LocationDetailsPage({
   params,

@@ -1,10 +1,10 @@
 import "server-only";
 
-import { cache } from "react";
-import { redirect } from "next/navigation";
+import { User } from "@notthesamadamsguy/location-finder-types";
 import { JWTPayload, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { User } from "@notthesamadamsguy/location-finder-types";
+import { redirect } from "next/navigation";
+import { cache } from "react";
 
 const secretKey = process.env.JWT_SECRET_KEY;
 const encodedKey = new TextEncoder().encode(secretKey);

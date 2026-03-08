@@ -1,12 +1,13 @@
 "use client";
 
-import { JSX, useState } from "react";
-import Image from "next/image";
-import { LocationImage } from "@notthesamadamsguy/location-finder-types";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImages } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { LocationImage } from "@notthesamadamsguy/location-finder-types";
+import Image from "next/image";
+import { JSX, useState } from "react";
 
 import { getImageUrl } from "@/lib/utils/imageUtils";
+
 import LocationImageDialog from "./LocationImageDialog";
 
 interface Props {

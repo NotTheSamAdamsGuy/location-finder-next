@@ -1,20 +1,21 @@
 "use client";
 
-import { useEffect, useReducer, useRef } from "react";
-import { useSearchParams } from "next/navigation";
-import { twMerge } from "tailwind-merge";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
-
-import { MapListAction, MapListState } from "@/types/maps.types";
-import { getNearbyLocations } from "@/lib/api/locations";
-import FeatureCard from "./FeatureCard";
-import Marker from "./Marker";
-import Popup from "./Popup";
-import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
 import { faMap } from "@fortawesome/free-regular-svg-icons";
 import { faList } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
+import mapboxgl from "mapbox-gl";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useReducer, useRef } from "react";
+import { twMerge } from "tailwind-merge";
+import "mapbox-gl/dist/mapbox-gl.css";
+
+import { getNearbyLocations } from "@/lib/api/locations";
+import { MapListAction, MapListState } from "@/types/maps.types";
+
+import FeatureCard from "./FeatureCard";
+import Marker from "./Marker";
+import Popup from "./Popup";
 
 export default function MapListComponent() {
   const searchParams = useSearchParams();

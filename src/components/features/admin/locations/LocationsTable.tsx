@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import {
   LocationFeature,
   LocationFeatureCollection,
 } from "@notthesamadamsguy/location-finder-types";
+import { useState } from "react";
 
-import { TableData } from "@/types/tables.types";
-import { removeLocation } from "@/formActions/admin/locations";
 import TableActionControls from "@/components/features/admin/TableActionControls";
 import { ClientTable } from "@/components/ui/ClientTable";
+import { removeLocation } from "@/formActions/admin/locations";
+import { TableData } from "@/types/tables.types";
 
 export default function LocationsTable({
   data,

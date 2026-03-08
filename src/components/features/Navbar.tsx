@@ -1,8 +1,9 @@
 "use client";
 
 import { UserProfile } from "@notthesamadamsguy/location-finder-types";
-import LogoutLink from "./auth/LogoutLink";
 import Link from "next/link";
+
+import LogoutLink from "./auth/LogoutLink";
 
 function AdminLink({role}: {role: string | null}) {
   let adminLink: React.ReactNode = "";

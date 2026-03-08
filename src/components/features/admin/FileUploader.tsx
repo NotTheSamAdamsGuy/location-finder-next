@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRef, useState } from "react";
 
 /**
  * @typedef {Object} FileUploaderProps

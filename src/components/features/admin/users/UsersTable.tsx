@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 
-import { TableData } from "@/types/tables.types";
-import { removeUser } from "@/formActions/admin/users";
 import ActionControls from "@/components/features/admin/TableActionControls";
 import { ClientTable } from "@/components/ui/ClientTable";
+import { removeUser } from "@/formActions/admin/users";
+import { TableData } from "@/types/tables.types";
 
 export default function UsersTable({ data }: { data: string[] }) {
   const [usernames, setUsernames] = useState<string[]>(data);

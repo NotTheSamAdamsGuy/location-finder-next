@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { forbidden } from "next/navigation";
-;
-import { verifySession } from "@/lib/session";
-import { getAllLocations } from "@/lib/api/locations";
+
 import Breadcrumbs from "@/components/features/admin/Breadcrumbs";
 import LocationsTable from "@/components/features/admin/locations/LocationsTable"
+import { getAllLocations } from "@/lib/api/locations";
+import { verifySession } from "@/lib/session";
 
 export default async function LocationsAdminPage() {
   const session = await verifySession();

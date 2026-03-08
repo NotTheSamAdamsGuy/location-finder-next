@@ -1,7 +1,8 @@
 import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
-import { twMerge } from "tailwind-merge";
-import FeatureCardImage from "./FeatureCardImage";
 import Link from "next/link";
+import { twMerge } from "tailwind-merge";
+
+import FeatureCardImage from "./FeatureCardImage";
 
 type FeatureCardProps = {
   feature: LocationFeature;

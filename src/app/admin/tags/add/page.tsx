@@ -1,9 +1,9 @@
 import { forbidden } from "next/navigation";
 
-import { verifySession } from "@/lib/session";
 import Breadcrumbs from "@/components/features/admin/Breadcrumbs";
 import PageHeader from "@/components/features/admin/PageHeader";
 import TagForm from "@/components/features/admin/tags/TagForm";
+import { verifySession } from "@/lib/session";
 
 export default async function AddTagAdminPage() {
   const session = await verifySession();

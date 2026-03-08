@@ -1,18 +1,18 @@
 "use client";
 
-import Image, { StaticImageData } from "next/image";
-import { useActionState, useCallback, useRef, useState } from "react";
+import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MapboxSuggestion } from "@notthesamadamsguy/location-finder-types";
+import Image, { StaticImageData } from "next/image";
+import { useRouter } from "next/navigation";
+import { useActionState, useCallback, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
+import Searchbox from "@/components/ui/Searchbox";
 import {
   getLocationSuggestions,
   getMapLocationCoordinates,
 } from "@/formActions/search";
-import Searchbox from "@/components/ui/Searchbox";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { twMerge } from "tailwind-merge";
-import { useRouter } from "next/navigation";
 
 type ListItemData = {
   name: string;
