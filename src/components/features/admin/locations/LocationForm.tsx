@@ -1,6 +1,7 @@
 "use client";
 
 import { LocationFeature } from "@notthesamadamsguy/location-finder-types";
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 
 import FileUploader, {
@@ -24,6 +25,11 @@ export default function LocationForm({
 }: LocationFormProps) {
   const formAction = type === "update" ? updateLocation : addLocation;
   const [formState, action, pending] = useActionState(formAction, undefined);
+  const router = useRouter();
+
+  const handleCancelButtonClick = () => {
+    router.back();
+  }
 
   const tagOptions =
     tags?.map((tag) => {
@@ -215,14 +221,15 @@ export default function LocationForm({
         {formState?.errors.displayOnSite}
       </p>
 
-      <div className="flex mt-8 justify-center">
+      <div className="flex mt-8 justify-around">
         <button
-          className="btn btn-primary w-full"
+          className="btn btn-primary"
           type="submit"
           disabled={pending}
         >
           Submit
         </button>
+        <button className="btn" onClick={handleCancelButtonClick}>Cancel</button>
       </div>
     </form>
   );

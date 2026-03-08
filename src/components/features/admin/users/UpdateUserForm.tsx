@@ -1,6 +1,7 @@
 "use client";
 
 import { UserProfile } from "@notthesamadamsguy/location-finder-types";
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 
 import Select from "@/components/ui/Select";
@@ -14,6 +15,11 @@ type UserFormProps = {
 export default function UpdateUserForm({ user }: UserFormProps) {
   const formAction = updateUser;
   const [formState, action, pending] = useActionState(formAction, undefined);
+  const router = useRouter();
+
+  const handleCancelButtonClick = () => {
+    router.back();
+  };
 
   const roleOptions = USER_ROLES.map((role) => {
     return { key: role.name, value: role.value };
@@ -126,13 +132,16 @@ export default function UpdateUserForm({ user }: UserFormProps) {
         <p className="text-error text-sm h-1.5">{formState?.errors.role}</p>
       </div>
 
-      <div className="flex mt-8 justify-center">
+      <div className="flex mt-8 justify-around">
         <button
-          className="btn btn-primary w-full"
+          className="btn btn-primary"
           type="submit"
           disabled={pending}
         >
           Submit
+        </button>
+        <button className="btn" onClick={handleCancelButtonClick}>
+          Cancel
         </button>
       </div>
     </form>

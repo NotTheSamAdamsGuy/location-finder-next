@@ -1,12 +1,24 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 
 import { addTag, updateTag } from "@/formActions/admin/tags";
 
-export default function TagForm({ tag = "", type }: { tag?: string, type: string }) {
+export default function TagForm({
+  tag = "",
+  type,
+}: {
+  tag?: string;
+  type: string;
+}) {
   const formAction = type === "update" ? updateTag : addTag;
   const [state, action, pending] = useActionState(formAction, undefined);
+  const router = useRouter();
+
+  const handleCancelButtonClick = () => {
+    router.back();
+  };
 
   return (
     <form action={action} className="flex flex-col w-full">
@@ -26,13 +38,16 @@ export default function TagForm({ tag = "", type }: { tag?: string, type: string
         />
         <p className="text-error text-sm h-1.5">{state?.errors.tag}</p>
       </div>
-      <div className="flex mt-12 justify-center">
+      <div className="flex mt-12 justify-around">
         <button
-          className="btn btn-primary w-full"
+          className="btn btn-primary"
           type="submit"
           disabled={pending}
         >
           Submit
+        </button>
+        <button className="btn" onClick={handleCancelButtonClick}>
+          Cancel
         </button>
       </div>
     </form>

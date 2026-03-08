@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
 
 import Select from "@/components/ui/Select";
@@ -8,10 +9,18 @@ import { addUser } from "@/formActions/admin/users";
 export default function AddUserForm() {
   const formAction = addUser;
   const [formState, action, pending] = useActionState(formAction, undefined);
+  const router = useRouter();
 
-  const roleOptions = [{name: "user", value: "User"}, {name: "admin", value: "Admin"}].map((role) => {
-      return { key: role.name, value: role.value };
-    });
+  const handleCancelButtonClick = () => {
+    router.back();
+  };
+
+  const roleOptions = [
+    { name: "user", value: "User" },
+    { name: "admin", value: "Admin" },
+  ].map((role) => {
+    return { key: role.name, value: role.value };
+  });
 
   // prioritize formState values over values passed in as user props; fallback to blank/empty/false values.
   const username = formState?.fields.username?.toString() || "";
@@ -50,9 +59,7 @@ export default function AddUserForm() {
           autoComplete="off"
           defaultValue={password}
         />
-        <p className="text-error text-sm h-1.5">
-          {formState?.errors.password}
-        </p>
+        <p className="text-error text-sm h-1.5">{formState?.errors.password}</p>
       </div>
 
       <div className="flex flex-col mt-4">
@@ -103,13 +110,16 @@ export default function AddUserForm() {
         <p className="text-error text-sm h-1.5">{formState?.errors.role}</p>
       </div>
 
-      <div className="flex mt-8 justify-center">
+      <div className="flex mt-8 justify-around">
         <button
-          className="btn btn-primary w-full"
+          className="btn btn-primary"
           type="submit"
           disabled={pending}
         >
           Submit
+        </button>
+        <button className="btn" onClick={handleCancelButtonClick}>
+          Cancel
         </button>
       </div>
     </form>
