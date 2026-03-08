@@ -33,20 +33,21 @@ export default function LocationImageDialog({
         alt={image?.description || "location image"}
         width={768}
         height={412}
-        className="w-full h-72 object-cover object-center mb-2"
+        className="w-full h-72 object-cover object-center mb-2 md:w-2xl md:h-[396px] md:mx-auto"
       />
-    )
+    );
   });
 
   return (
     <Dialog
+      className="md:max-w-4xl md:max-h-dvh md:my-3 md:rounded-lg"
       showDialog={showDialog}
       id="location-images-dialog"
       closeButtonLocation="left"
       closeButtonIcon={faAngleLeft}
       closeButtonText="Return to location"
       scrollTo={scrollTo}
-      onCloseClick={handleCloseClick}
+      onClose={handleCloseClick}
     >
       {dialogImages}
     </Dialog>

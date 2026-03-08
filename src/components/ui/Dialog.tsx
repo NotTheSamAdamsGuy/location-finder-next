@@ -12,7 +12,7 @@ interface Props {
   children: React.ReactNode;
   className?: string;
   scrollTo?: number;
-  onCloseClick: (event?: React.MouseEvent<HTMLButtonElement>) => void;
+  onClose: (event?: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export default function Dialog({
@@ -24,7 +24,7 @@ export default function Dialog({
   children,
   className,
   scrollTo,
-  onCloseClick,
+  onClose,
 }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -50,7 +50,7 @@ export default function Dialog({
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onCloseClick();
+        onClose();
       }
     };
 
@@ -61,16 +61,16 @@ export default function Dialog({
     };
   });
 
-  const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
-    onCloseClick(event);
+  const closeDialog = (event: React.MouseEvent<HTMLButtonElement>) => {
+    onClose(event);
   };
 
   return (
     <dialog
       id={id}
       className={twMerge(
-        "fixed inset-0 size-auto max-h-none max-w-none",
-        "overflow-y-auto open:animate-fade-in open:backdrop:animate-fade-in",
+        "fixed inset-0 size-auto max-h-none max-w-none m-auto",
+        "overflow-y-auto open:animate-fade-in open:backdrop:animate-dialog-fade-in",
         "backdrop:bg-gray-400 backdrop:opacity-60 bg-base-100 shadow-md shadow-gray-400",
         "dark:backdrop:bg-gray-700 dark:backdrop:opacity-70 dark:bg-gray-600 dark:shadow-gray-900",
         className,
@@ -80,12 +80,12 @@ export default function Dialog({
       <div className={`flex h-16 sticky top-0 bg-base-100`}>
         <button
           className={twMerge(
-            "flex items-center px-3 w-full",
+            "flex items-center px-3 cursor-pointer",
             closeButtonLocation === "left"
               ? "left-3"
               : "right-3 flex-row-reverse",
           )}
-          onClick={handleClose}
+          onClick={closeDialog}
         >
           <FontAwesomeIcon icon={closeButtonIcon} className="text-xl" />
           <span>{closeButtonText}</span>

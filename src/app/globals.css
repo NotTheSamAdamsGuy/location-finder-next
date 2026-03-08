@@ -3,6 +3,7 @@
 
 @theme {
   --animate-fade-in: fade-in 0.15s ease-in-out;
+  --animate-dialog-fade-in: dialog-fade-in 0.15s ease-in-out;
   --animate-fade-out: fade-out 0.15s ease-in-out;
   --breakpoint-xs: 30rem;
 
@@ -21,6 +22,15 @@
     }
     100% {
       opacity: 0
+    }
+  }
+
+  @keyframes dialog-fade-in {
+    0% {
+      opacity: 0
+    }
+    100% {
+      opacity: 0.6
     }
   }
 }
