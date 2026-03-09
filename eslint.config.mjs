@@ -1,46 +1,33 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-
-import { FlatCompat } from "@eslint/eslintrc";
+import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 import importPlugin from "eslint-plugin-import";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-  {
-    ignores: [
-      "node_modules/**",
-      ".next/**",
-      "out/**",
-      "build/**",
-      "next-env.d.ts",
-      "coverage/**"
-    ],
+const eslintConfig = [...nextCoreWebVitals, ...nextTypescript, {
+  ignores: [
+    "node_modules/**",
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+    "coverage/**"
+  ],
+}, {
+  plugins: {
+    import: importPlugin
   },
-  {
-    plugins: {
-      import: importPlugin
-    },
-    rules: {
-      "import/order": [
-        "error",
-        {
-          "groups": ["builtin", "external", "internal", "parent", "sibling", "index"], // Define custom groups
-          "newlines-between": "always", // Add blank lines between groups
-          "alphabetize": {
-            "order": "asc", // Sort alphabetically within groups
-            "caseInsensitive": true
-          }
+  rules: {
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"], // Define custom groups
+        "newlines-between": "always", // Add blank lines between groups
+        "alphabetize": {
+          "order": "asc", // Sort alphabetically within groups
+          "caseInsensitive": true
         }
-      ]
-    }
+      }
+    ]
   }
-];
+}];
 
 export default eslintConfig;
