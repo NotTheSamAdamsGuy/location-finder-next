@@ -1,24 +1,25 @@
-"use client"; // This is a Client Component
+"use client";
 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+import { useRouter } from "next/navigation";
+
+export default function Error() {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.refresh();
+  };
+
   return (
-    <div>
-      <h2>Something went wrong!</h2>
-      <p>{error.message}</p> {/* Display the error message */}
-      <button
-        onClick={
-          // Attempt to recover by trying to re-render the segment
-          () => reset()
-        }
-      >
-        Try again
-      </button>
+    <div className="absolute top-1/3 w-full">
+      <div className="flex flex-col items-center">
+        <h1 className="text-6xl font-semibold mb-8">Oops!</h1>
+        <p className="mb-8 px-8 text-center text-lg">
+          An unexpected error has occurred. Please reload the page.
+        </p>
+        <button className="btn btn-primary flex" onClick={handleClick}>
+          Reload
+        </button>
+      </div>
     </div>
   );
 }
