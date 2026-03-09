@@ -3,7 +3,6 @@ import { LocationImage } from "@notthesamadamsguy/location-finder-types";
 import Image from "next/image";
 
 import Dialog from "@/components/ui/Dialog";
-import { getImageUrl } from "@/lib/utils/imageUtils";
 
 interface Props {
   showDialog: boolean;
@@ -28,7 +27,7 @@ export default function LocationImageDialog({
         key={`location-${index}`}
         src={
           image && image.filename !== "placeholder.jpg"
-            ? getImageUrl(image)
+            ? image.url!
             : "/placeholder.jpg"
         }
         alt={image?.description || "location image"}

@@ -6,8 +6,6 @@ import { LocationImage } from "@notthesamadamsguy/location-finder-types";
 import Image from "next/image";
 import { JSX, useState } from "react";
 
-import { getImageUrl } from "@/lib/utils/imageUtils";
-
 import LocationImageDialog from "./LocationImageDialog";
 
 interface Props {
@@ -91,7 +89,7 @@ export default function LocationImageCarousel({ images }: Props) {
         <Image
           src={
             image && image.filename !== "placeholder.jpg"
-              ? getImageUrl(image)
+              ? image.url!
               : "/placeholder.jpg"
           }
           alt={image?.description || "location image"}
@@ -128,7 +126,7 @@ export default function LocationImageCarousel({ images }: Props) {
       <Image
         src={
           imagesForGrid[index].filename !== "placeholder.jpg"
-            ? getImageUrl(imagesForGrid[index])
+            ? imagesForGrid[index].url!
             : "/placeholder.jpg"
         }
         alt={imagesForGrid[index].description || "location image"}
