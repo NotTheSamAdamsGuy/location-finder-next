@@ -57,6 +57,7 @@ export default function MapListComponent() {
     }
   };
 
+  // eslint-disable-next-line
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
   const initialState: MapListState = {

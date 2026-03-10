@@ -62,7 +62,7 @@ export default function Popup({ map, activeFeature }: PopupProps) {
             </div>
           </div>
         </Link>,
-        contentRef.current
+        contentRef.current // eslint-disable-line
       )}
     </>
   );

@@ -48,7 +48,7 @@ export default function Marker({
           {type === "feature" && <MarkerPin />}
           {type === "user" && <FontAwesomeIcon icon={faLocationCrosshairs} className="fa-2xl" />}
         </div>,
-        contentRef.current
+        contentRef.current // eslint-disable-line
       )}
     </>
   );
