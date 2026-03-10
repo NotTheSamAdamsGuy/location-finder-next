@@ -8,6 +8,7 @@ export type MapListState = {
   displayPopup: boolean;
   mapLoaded: boolean;
   activeView: string;
+  listLoaded: boolean;
 };
 
 export type MapListAction =
@@ -16,4 +17,5 @@ export type MapListAction =
   | { type: "REPOSITION_MAP"; payload: Coordinates }
   | { type: "SELECT_LOCATION"; payload: LocationFeature | null }
   | { type: "MAP_LOADED"; payload: boolean }
-  | { type: "SWITCH_VIEW"; payload: null };
+  | { type: "SWITCH_VIEW"; payload: null }
+  | { type: "LIST_LOADED"; payload: boolean };

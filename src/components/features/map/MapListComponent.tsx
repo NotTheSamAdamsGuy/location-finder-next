@@ -14,7 +14,9 @@ import { getNearbyLocations } from "@/lib/api/locations";
 import { MapListAction, MapListState } from "@/types/maps.types";
 
 import FeatureCard from "./FeatureCard";
+import LoadingCard from "./LoadingCard";
 import Marker from "./Marker";
+import NoResultsCard from "./NoResultsCard";
 import Popup from "./Popup";
 
 export default function MapListComponent() {
@@ -52,6 +54,11 @@ export default function MapListComponent() {
           ...state,
           activeView: state.activeView === "list" ? "map" : "list",
         };
+      case "LIST_LOADED":
+        return {
+          ...state,
+          listLoaded: action.payload
+        };
       default:
         return state;
     }
@@ -65,7 +72,7 @@ export default function MapListComponent() {
       searchParams.get("zoom") ||
         process.env.NEXT_PUBLIC_DEFAULT_ZOOMLEVEL ||
         "13",
-      10
+      10,
     ),
     featureCollection: { type: "FeatureCollection", features: [] },
     coordinates: {
@@ -76,6 +83,7 @@ export default function MapListComponent() {
     displayPopup: false,
     mapLoaded: false,
     activeView: "list",
+    listLoaded: false,
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -85,7 +93,7 @@ export default function MapListComponent() {
   const handleFeatureCardClick = (evt: React.MouseEvent<HTMLDivElement>) => {
     const selectedLocation =
       state.featureCollection.features.find(
-        (feature) => feature.id === evt.currentTarget.dataset["id"]
+        (feature) => feature.id === evt.currentTarget.dataset["id"],
       ) || null;
 
     // TODO: take user to detail page; determine if we need to set the selected location or not
@@ -108,7 +116,7 @@ export default function MapListComponent() {
     });
 
     mapRef.current.addControl(
-      new mapboxgl.NavigationControl({ showCompass: false })
+      new mapboxgl.NavigationControl({ showCompass: false }),
     );
 
     mapRef.current.on("load", () => {
@@ -182,6 +190,7 @@ export default function MapListComponent() {
       }
 
       dispatch({ type: "LOAD_LOCATIONS", payload: locations });
+      dispatch({ type: "LIST_LOADED", payload: true });
     }
     fetchLocationsData();
   }, [
@@ -191,15 +200,22 @@ export default function MapListComponent() {
     searchParams,
   ]);
 
-  const locationCards = state.featureCollection.features
-    .filter((feature) => feature.properties?.type !== "user-location")
-    .map((feature) => (
-      <FeatureCard
-        key={`card-${feature.id}`}
-        feature={feature as LocationFeature}
-        onClick={handleFeatureCardClick}
-      />
-    ));
+  const locationCards =
+    state.featureCollection.features.length > 0 ? (
+      state.featureCollection.features
+        .filter((feature) => feature.properties?.type !== "user-location")
+        .map((feature) => (
+          <FeatureCard
+            key={`card-${feature.id}`}
+            feature={feature as LocationFeature}
+            onClick={handleFeatureCardClick}
+          />
+        ))
+    ) : state.listLoaded !== true ? (
+      <LoadingCard />
+    ) : (
+      <NoResultsCard />
+    );
 
   const handleMarkerClick = (evt: React.MouseEvent<HTMLDivElement>) => {
     const id = evt.currentTarget.dataset["id"];
@@ -223,7 +239,7 @@ export default function MapListComponent() {
     <div
       className={twMerge(
         "flex w-full h-[calc(100vh-64px)] relative overflow-hidden",
-        "md:overflow-auto"
+        "md:overflow-auto",
       )}
     >
       <div
@@ -232,7 +248,7 @@ export default function MapListComponent() {
           "md:flex-1",
           state.activeView === "map"
             ? ""
-            : "absolute right-[-2000px] md:static md:right-0 overflow-hidden"
+            : "absolute right-[-2000px] md:static md:right-0 overflow-hidden",
         )}
       >
         <div
@@ -266,14 +282,14 @@ export default function MapListComponent() {
           "md:flex-none md:w-96 md:shadow-[-2px_0_5px_0px_rgba(0,0,0,0.5)] md:z-10",
           state.activeView === "list"
             ? ""
-            : "absolute right-[-2000px] md:static md:right-0"
+            : "absolute right-[-2000px] md:static md:right-0",
         )}
       >
         <div
           className={twMerge(
             "flex flex-col gap-2 w-full",
             "sm:flex-row sm:justify-between sm:flex-wrap sm:gap-4 sm-h-[100px]",
-            "md:flex-col md:flex-nowrap md:h-0"
+            "md:flex-col md:flex-nowrap md:h-0",
           )}
         >
           {locationCards}
